@@ -120,6 +120,8 @@ class list {
     pos.GetNode()->tail->head = pos.GetNode()->head;
     pos.GetNode()->head->tail = pos.GetNode()->tail;
     delete pos.GetNode();
+
+    --size_;
   }
   void push_back(const_reference value) noexcept {
     auto new_node = new TNode(value, head_node_->head, head_node_);
@@ -180,7 +182,7 @@ class list {
           }
         }
       }
-
+      size_ += other.size();
       if (other.size()) other.clear();
     }
   }
@@ -217,6 +219,8 @@ class list {
         remove_node->head->tail = remove_node->tail;
         remove_node->tail->head = remove_node->head;
         delete remove_node;
+
+        --size_;
       } else {
         ++iter_node;
       }
