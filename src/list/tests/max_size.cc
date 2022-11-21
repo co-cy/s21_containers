@@ -2,28 +2,30 @@
 // Created by Nana Daughterless on 11/15/22.
 //
 
-#include "gtest/gtest.h"
-#include "list/list.h"
 #include <list>
 
-TEST(listMaxSizeTest, check_empty_list_char) {
-  s21::list<char> a{};
-  std::list<char> b{};
+#include "gtest/gtest.h"
+#include "list/list.h"
 
-  EXPECT_EQ(a.max_size(), b.max_size());
+template <typename T>
+struct ListMaxSizeTest : public testing::Test {
+  using List = s21::list<T>;
+  using SList = std::list<T>;
+};
+
+using ListMaxSizeTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(ListMaxSizeTest, ListMaxSizeTypes);
+
+TYPED_TEST(ListMaxSizeTest, empty_list) {
+  using List = typename TestFixture::List;
+  using SList = typename TestFixture::SList;
+
+  EXPECT_EQ(List().max_size(), SList().max_size());
 }
 
-TEST(listMaxSizeTest, check_empty_list_int) {
-  s21::list<int> a{};
-  std::list<int> b{};
+TYPED_TEST(ListMaxSizeTest, size_n_list) {
+  using List = typename TestFixture::List;
+  using SList = typename TestFixture::SList;
 
-  EXPECT_EQ(a.max_size(), b.max_size());
+  EXPECT_EQ(List(11).max_size(), SList(11).max_size());
 }
-
-TEST(listMaxSizeTest, check_empty_list_ld) {
-  s21::list<long double> a{};
-  std::list<long double> b{};
-
-  EXPECT_EQ(a.max_size(), b.max_size());
-}
-

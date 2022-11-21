@@ -21,7 +21,7 @@ TYPED_TEST(ListFrontTest, empty_list) {
 TYPED_TEST(ListFrontTest, one_item) {
   using List = typename TestFixture::List;
   TypeParam value{110};
-  EXPECT_EQ(List({value}).front(), value);
+  EXPECT_DOUBLE_EQ(List({value}).front(), value);
 }
 
 TYPED_TEST(ListFrontTest, many_item) {
