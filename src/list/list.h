@@ -34,11 +34,13 @@ class list {
   TNode *head_node_;
   size_type size_;
   void ClearNodes() {
-    head_node_->tail->tail = nullptr;
-    while (head_node_) {
-      TNode *next_node = head_node_->tail;
-      delete head_node_;
-      head_node_ = next_node;
+    if (head_node_) {
+      head_node_->head->tail = nullptr;
+      while (head_node_) {
+        TNode *next_node = head_node_->tail;
+        delete head_node_;
+        head_node_ = next_node;
+      }
     }
   }
 
@@ -49,8 +51,11 @@ class list {
     if (n <= 0) return;
 
     while (--n) {
-      auto new_node = new TNode(head_node_->head, head_node_);
-      head_node_->tail->tail = new_node;
+      // head_node_->head -> last_elem
+      // head_node_ -> end
+      //
+      auto *new_node = new TNode(head_node_->head, head_node_);
+      head_node_->head->tail = new_node;
       head_node_->head = new_node;
     }
   };
@@ -58,7 +63,7 @@ class list {
       : head_node_(new TNode()), size_(items.size()) {
     for (auto item : items) {
       auto new_node = new TNode(item, head_node_->head, head_node_);
-      head_node_->tail->tail = new_node;
+      head_node_->head->tail = new_node;
       head_node_->head = new_node;
     }
   };
@@ -110,8 +115,7 @@ class list {
     size_ = 0;
 
     // set nullptr end (cascade delete, not cycled)
-    head_node_->head->tail = nullptr;
-    delete head_node_;
+    ClearNodes();
 
     head_node_ = new TNode();
   };

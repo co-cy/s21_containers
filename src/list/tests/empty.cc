@@ -5,17 +5,39 @@
 #include "gtest/gtest.h"
 #include "list/list.h"
 
-TEST(listEmptyTest, check_empty_list_char) {
-  s21::list<char> a{};
-  EXPECT_TRUE(a.empty());
+template <typename T>
+struct ListEmptyTest : public testing::Test {
+  using List = s21::list<T>;
+};
+
+using ListEmptyTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(ListEmptyTest, ListEmptyTypes);
+
+TYPED_TEST(ListEmptyTest, empty_list) {
+  using List = typename TestFixture::List;
+  EXPECT_TRUE(List().empty());
 }
 
-TEST(listEmptyTest, check_empty_list_int) {
-  s21::list<int> a{};
-  EXPECT_TRUE(a.empty());
+TYPED_TEST(ListEmptyTest, not_empty_list) {
+  using List = typename TestFixture::List;
+  EXPECT_TRUE(List(0).empty());
+  EXPECT_TRUE(List({}).empty());
+  EXPECT_FALSE(List(4).empty());
+  EXPECT_FALSE(List({TypeParam()}).empty());
 }
 
-TEST(listEmptyTest, check_empty_list_ld) {
-  s21::list<long double> a{};
-  EXPECT_TRUE(a.empty());
+TYPED_TEST(ListEmptyTest, cleared_list) {
+  using List = typename TestFixture::List;
+  List a = List(0);
+  a.clear();
+  ASSERT_TRUE(a.empty());
+  a = List({});
+  a.clear();
+  ASSERT_TRUE(a.empty());
+  a = List(4);
+  a.clear();
+  ASSERT_TRUE(a.empty());
+  a = List({TypeParam(), TypeParam(), TypeParam()});
+  a.clear();
+  ASSERT_TRUE(a.empty());
 }
