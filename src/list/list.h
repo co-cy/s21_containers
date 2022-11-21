@@ -40,14 +40,14 @@ class list {
   explicit list(size_type n) : head_node_(new TNode()), size_(n) {
     if (n <= 0) return;
 
-    while (--n) {
+    do {
       // head_node_->head -> last_elem
       // head_node_ -> end
       //
       auto *new_node = new TNode(head_node_->head, head_node_);
       head_node_->head->tail = new_node;
       head_node_->head = new_node;
-    }
+    } while (--n);
   };
   list(std::initializer_list<value_type> const &items)
       : head_node_(new TNode()), size_(items.size()) {

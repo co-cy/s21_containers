@@ -42,11 +42,11 @@ class NodeIterator {
   NodeIterator() : head_node_(new TNode()) {}
   explicit NodeIterator(TNode* head_node) noexcept : head_node_(head_node) {}
   TNode* GetNode() { return head_node_; };
-  NodeIterator<T>& operator++() noexcept {
+  NodeIterator<value_type>& operator++() noexcept {
     head_node_ = head_node_->tail;
     return *this;
   }
-  NodeIterator<T>& operator--() noexcept {
+  NodeIterator<value_type>& operator--() noexcept {
     head_node_ = head_node_->head;
     return *this;
   }
@@ -64,7 +64,7 @@ class NodeIterator {
     return this_head == other_head;
   }
   bool operator!=(const NodeIterator<value_type>& other) const noexcept {
-    return !(this == other);
+    return !(*this == other);
   }
   value_type operator*() const noexcept { return head_node_->tail->data; }
 };
