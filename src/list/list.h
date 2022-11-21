@@ -46,6 +46,8 @@ class list {
   ///                 <----------List Functions---------->
   list() : head_node_(new TNode()), size_(0){};
   explicit list(size_type n) : head_node_(new TNode()), size_(n) {
+    if (n <= 0) return;
+
     while (--n) {
       auto new_node = new TNode(head_node_->head, head_node_);
       head_node_->tail->tail = new_node;

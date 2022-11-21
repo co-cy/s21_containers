@@ -5,50 +5,29 @@
 #include "gtest/gtest.h"
 #include "list/list.h"
 
-TEST(listConstructTest, create_empty_list_char) {
-  ASSERT_NO_THROW(s21::list<char>());
+template <typename T>
+struct ListConstructorTest : public testing::Test {
+  using List = s21::list<T>;
+};
+
+using ListConstructTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(ListConstructorTest, ListConstructTypes);
+
+TYPED_TEST(ListConstructorTest, empty) {
+  using List = typename TestFixture::List;
+  ASSERT_NO_THROW(List());
 }
 
-TEST(listConstructTest, create_empty_list_int) {
-  ASSERT_NO_THROW(s21::list<int>());
+TYPED_TEST(ListConstructorTest, size_n) {
+  using List = typename TestFixture::List;
+  ASSERT_NO_THROW(List(0));
+  ASSERT_NO_THROW(List(1));
+  ASSERT_NO_THROW(List(8));
 }
 
-TEST(listConstructTest, create_empty_list_ld) {
-  ASSERT_NO_THROW(s21::list<long double>());
-}
-
-TEST(listConstructTest, create_n_list_char) {
-  ASSERT_NO_THROW(s21::list<char>(0));
-  ASSERT_NO_THROW(s21::list<char>(1));
-  ASSERT_NO_THROW(s21::list<char>(8));
-}
-
-TEST(listConstructTest, create_n_list_int) {
-  ASSERT_NO_THROW(s21::list<int>(0));
-  ASSERT_NO_THROW(s21::list<int>(1));
-  ASSERT_NO_THROW(s21::list<int>(8));
-}
-
-TEST(listConstructTest, create_n_list_ld) {
-  ASSERT_NO_THROW(s21::list<long double>(0));
-  ASSERT_NO_THROW(s21::list<long double>(1));
-  ASSERT_NO_THROW(s21::list<long double>(8));
-}
-
-TEST(listConstructTest, create_init_list_list_char) {
-  ASSERT_NO_THROW(s21::list<char>({}));
-  ASSERT_NO_THROW(s21::list<char>({'a'}));
-  ASSERT_NO_THROW(s21::list<char>({'a', 'b', 'c'}));
-}
-
-TEST(listConstructTest, create_init_list_list_int) {
-  ASSERT_NO_THROW(s21::list<int>({}));
-  ASSERT_NO_THROW(s21::list<int>({1}));
-  ASSERT_NO_THROW(s21::list<int>({1, 2, 3}));
-}
-
-TEST(listConstructTest, create_init_list_list_ld) {
-  ASSERT_NO_THROW(s21::list<long double>({}));
-  ASSERT_NO_THROW(s21::list<long double>({0.025}));
-  ASSERT_NO_THROW(s21::list<long double>({0.25, 1.9, 51.31, 1}));
+TYPED_TEST(ListConstructorTest, initializer_list) {
+  using List = typename TestFixture::List;
+  ASSERT_NO_THROW(List({}));
+  ASSERT_NO_THROW(List({TypeParam()}));
+  ASSERT_NO_THROW(List({TypeParam(), TypeParam(), TypeParam()}));
 }
