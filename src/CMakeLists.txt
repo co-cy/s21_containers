@@ -18,7 +18,7 @@ add_executable(list_test
         list/tests/front.cc
         list/tests/back.cc
         list/tests/clear.cc
-        list/tests/swap.cc)
+        list/tests/swap.cc list/tests/insert.cc)
 target_link_libraries(list_test gtest gtest_main)
 
 #add_executable(CPPContainers

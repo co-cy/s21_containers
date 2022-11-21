@@ -14,6 +14,7 @@ template <class T>
 struct Node {
   using value_type = T;
   using reference = value_type&;
+  using const_reference = const value_type&;
   using TNode = Node<value_type>;
 
   TNode* head;
@@ -22,7 +23,8 @@ struct Node {
 
   explicit Node(TNode* head = nullptr, TNode* tail = nullptr)
       : head((head) ? head : this), tail((tail) ? tail : this), data() {}
-  explicit Node(reference value, TNode* head = nullptr, TNode* tail = nullptr)
+  explicit Node(const_reference value, TNode* head = nullptr,
+                TNode* tail = nullptr)
       : data(value), head((head) ? head : this), tail((tail) ? tail : this){};
 };
 
@@ -39,7 +41,7 @@ class NodeIterator {
  public:
   // Head -> end node (когда делается вставка, обнавляется последний элемент)
   // Tail -> first element
-  NodeIterator() : head_node_(new TNode()) {}
+  NodeIterator() = default;
   explicit NodeIterator(TNode* head_node) noexcept : head_node_(head_node) {}
   TNode* GetNode() { return head_node_; };
   NodeIterator<value_type>& operator++() noexcept {
@@ -66,7 +68,7 @@ class NodeIterator {
   bool operator!=(const NodeIterator<value_type>& other) const noexcept {
     return !(*this == other);
   }
-  value_type operator*() const noexcept { return head_node_->tail->data; }
+  value_type operator*() const noexcept { return head_node_->data; }
 };
 
 }  // namespace s21

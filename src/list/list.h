@@ -90,8 +90,8 @@ class list {
   }
 
   ///                 <----------List Iterators---------->
-  iterator begin() noexcept { return iterator(head_node_); }
-  iterator end() noexcept { return --iterator(head_node_); }
+  iterator begin() noexcept { return iterator(head_node_->tail); }
+  iterator end() noexcept { return iterator(head_node_); }
 
   ///                 <----------List Capacity---------->
   [[nodiscard]] bool empty() const noexcept { return !size_; };
