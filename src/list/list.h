@@ -8,16 +8,6 @@
 
 namespace s21 {
 
-template<class T>
-class ListConstIterator : NodeIterator<const T> {
-  using NodeIterator<const T>::NodeIterator;
-};
-
-template <class T>
-class ListIterator : NodeIterator<T> {
-  using NodeIterator<T>::NodeIterator;
-};
-
 template <class T>
 class list {
  public:
@@ -26,8 +16,8 @@ class list {
   using reference = value_type &;
   using const_reference = const value_type &;
   using size_type = std::size_t;
-  using iterator = ListIterator<T>;
-  using const_iterator = ListConstIterator<T>;
+  using iterator = NodeIterator<T>;
+  using const_iterator = NodeIterator<const T>;
   using TNode = Node<value_type>;  // Template Node
 
  private:
@@ -112,12 +102,10 @@ class list {
 
   ///                 <----------List Modifiers---------->
   void clear() {
-    size_ = 0;
-
-    // set nullptr end (cascade delete, not cycled)
     ClearNodes();
 
     head_node_ = new TNode();
+    size_ = 0;
   };
   iterator insert(iterator pos, const_reference value) {
     auto new_node = new TNode(value, pos.GetNode()->head, pos.GetNode());

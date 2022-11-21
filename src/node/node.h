@@ -10,8 +10,6 @@
 
 namespace s21 {
 
-// head -> tail -> head
-
 template <class T>
 struct Node {
   using value_type = T;
@@ -43,13 +41,12 @@ class NodeIterator {
   // Tail -> first element
   NodeIterator() : head_node_(new TNode()) {}
   explicit NodeIterator(TNode* head_node) noexcept : head_node_(head_node) {}
-  ~NodeIterator() { delete head_node_; };
   TNode* GetNode() { return head_node_; };
-  NodeIterator<T>& operator++() const noexcept {
+  NodeIterator<T>& operator++() noexcept {
     head_node_ = head_node_->tail;
     return *this;
   }
-  NodeIterator<T>& operator--() const noexcept {
+  NodeIterator<T>& operator--() noexcept {
     head_node_ = head_node_->head;
     return *this;
   }
@@ -58,9 +55,9 @@ class NodeIterator {
     TNode* other_head = other.head_node_;
 
     while (this_head == other_head) {
-      ++this_head;
-      ++other_head;
-      if (head_node_->head == this_head || other.head_node_ == other_head)
+      this_head = this_head->tail;
+      other_head = other_head->tail;
+      if (head_node_->head == this_head || other.head_node_->head == other_head)
         break;
     }
 

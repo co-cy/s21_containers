@@ -5,47 +5,27 @@
 #include "gtest/gtest.h"
 #include "list/list.h"
 
-TEST(listFrontTest, check_empty_list_char) {
-  s21::list<char> a;
-  EXPECT_ANY_THROW((void)a.front());
+template <typename T>
+struct ListFrontTest : public testing::Test {
+  using List = s21::list<T>;
+};
+
+using ListFrontTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(ListFrontTest, ListFrontTypes);
+
+TYPED_TEST(ListFrontTest, empty_list) {
+  using List = typename TestFixture::List;
+  EXPECT_NO_THROW((void)List().front());
 }
 
-TEST(listFrontTest, check_empty_list_int) {
-  s21::list<int> a;
-  EXPECT_ANY_THROW((void)a.front());
+TYPED_TEST(ListFrontTest, one_item) {
+  using List = typename TestFixture::List;
+  TypeParam value{110};
+  EXPECT_EQ(List({value}).front(), value);
 }
 
-TEST(listFrontTest, check_empty_list_ld) {
-  s21::list<long double> a;
-  EXPECT_ANY_THROW((void)a.front());
-}
-
-TEST(listFrontTest, check_one_list_char) {
-  s21::list<char> a({'a'});
-  EXPECT_EQ(a.front(), 'a');
-}
-
-TEST(listFrontTest, check_one_list_int) {
-  s21::list<int> a({1});
-  EXPECT_EQ(a.front(), 1);
-}
-
-TEST(listFrontTest, check_one_list_ld) {
-  s21::list<long double> a({2.121});
-  EXPECT_DOUBLE_EQ(a.front(), 2.121);
-}
-
-TEST(listFrontTest, check_many_list_char) {
-  s21::list<char> a({'g', 'a', 'c', 'd'});
-  EXPECT_EQ(a.front(), 'g');
-}
-
-TEST(listFrontTest, check_many_list_int) {
-  s21::list<int> a({-10, 1, 2, 312, 4, 1, 6, 1});
-  EXPECT_EQ(a.front(), -10);
-}
-
-TEST(listFrontTest, check_many_list_ld) {
-  s21::list<long double> a({-113, -1235, 2.121});
-  EXPECT_DOUBLE_EQ(a.front(), -113);
+TYPED_TEST(ListFrontTest, many_item) {
+  using List = typename TestFixture::List;
+  TypeParam value{33};
+  EXPECT_DOUBLE_EQ(List({value, TypeParam(), TypeParam()}).front(), value);
 }
