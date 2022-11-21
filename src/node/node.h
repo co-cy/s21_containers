@@ -5,29 +5,71 @@
 #ifndef CPPCONTAINERS_NODE_H
 #define CPPCONTAINERS_NODE_H
 
-#include "../abstract/abstract.h"
-
 #include <initializer_list>
 #include <stdexcept>
 
 namespace s21 {
 
-template<class T>
-class Node : public Abstract<T> {
-  using typename Abstract<T>::value_type;
-  using typename Abstract<T>::size_type;
-  using Self = Node<value_type>;
+// head -> tail -> head
+
+template <class T>
+struct Node {
+  using value_type = T;
+  using reference = value_type&;
+  using TNode = Node<value_type>;
+
+  TNode* head;
+  TNode* tail;
+  value_type data;
+
+  explicit Node(TNode* head = nullptr, TNode* tail = nullptr)
+      : head((head) ? head : this), tail((tail) ? tail : this), data() {}
+  explicit Node(reference value, TNode* head = nullptr, TNode* tail = nullptr)
+      : data(value), head((head) ? head : this), tail((tail) ? tail : this){};
+};
+
+template <class T>
+class NodeIterator {
+ public:
+  using value_type = T;
+  using TNode = Node<T>;
 
  private:
-  Self* head_;
-  Self* tail_;
-  value_type data_;
+  // TODO(think) Может быть не очень удачным решением сделать её публичным
+  TNode* head_node_;
+
  public:
-  explicit Node(Self* head = nullptr, Self* tail = nullptr): head_(head), tail_(tail), data_() {};
-  explicit Node(Self& value, Self* head = nullptr, Self* tail = nullptr): data_(value), head_(head), tail_(tail) {};
-  ~Node() {
-      delete tail_;
-  };
+  // Head -> end node (когда делается вставка, обнавляется последний элемент)
+  // Tail -> first element
+  NodeIterator() : head_node_(new TNode()) {}
+  explicit NodeIterator(TNode* head_node) noexcept : head_node_(head_node) {}
+  ~NodeIterator() { delete head_node_; };
+  TNode* GetNode() { return head_node_; };
+  NodeIterator<T>& operator++() const noexcept {
+    head_node_ = head_node_->tail;
+    return *this;
+  }
+  NodeIterator<T>& operator--() const noexcept {
+    head_node_ = head_node_->head;
+    return *this;
+  }
+  bool operator==(const NodeIterator<value_type>& other) const noexcept {
+    TNode* this_head = head_node_;
+    TNode* other_head = other.head_node_;
+
+    while (this_head == other_head) {
+      ++this_head;
+      ++other_head;
+      if (head_node_->head == this_head || other.head_node_ == other_head)
+        break;
+    }
+
+    return this_head == other_head;
+  }
+  bool operator!=(const NodeIterator<value_type>& other) const noexcept {
+    return !(this == other);
+  }
+  value_type operator*() const noexcept { return head_node_->tail->data; }
 };
 
 }  // namespace s21

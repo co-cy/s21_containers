@@ -11,10 +11,11 @@ include("GoogleTest")
 
 add_executable(list_test
         s21_containers.h
-        list/tests/constract.cc
+        list/tests/construct.cc
         list/tests/empty.cc
         list/tests/max_size.cc
-        list/tests/size.cc)
+        list/tests/size.cc
+        list/tests/front.cc list/tests/clear.cc list/tests/swap.cc)
 target_link_libraries(list_test gtest gtest_main)
 
 #add_executable(CPPContainers

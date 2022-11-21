@@ -4,112 +4,76 @@
 #include <cstdio>
 #include <initializer_list>
 #include "../node/node.h"
-#include "../abstract/abstract.h"
 #include <limits>
 
 namespace s21 {
 
 template<class T>
-class ListIterator: Abstract<T> {
- private:
-  using typename Abstract<T>::value_type;
-  using TNode = Node<value_type>; // Template Node
-
-  TNode * head_node_;
- public:
-  explicit ListIterator(TNode* head) noexcept: head_node_(head) {};
+class ListConstIterator : NodeIterator<const T> {
+  using NodeIterator<const T>::NodeIterator;
 };
 
-template<class T>
-class ListConstIterator;
-
+template <class T>
+class ListIterator : NodeIterator<T> {
+  using NodeIterator<T>::NodeIterator;
+};
 
 template <class T>
-class list: Abstract<T> {
- private:
+class list {
+ public:
   ///                 <----------List Member type---------->
-  using typename Abstract<T>::value_type;
-  using typename Abstract<T>::size_type;
-  using typename Abstract<T>::reference;
-  using typename Abstract<T>::const_reference;
+  using value_type = T;
+  using reference = value_type &;
+  using const_reference = const value_type &;
+  using size_type = std::size_t;
   using iterator = ListIterator<T>;
   using const_iterator = ListConstIterator<T>;
-  using TNode = Node<value_type>; // Template Node
+  using TNode = Node<value_type>;  // Template Node
 
-  TNode * head_node_;
+ private:
+  TNode *head_node_;
   size_type size_;
+  void ClearNodes() {
+    head_node_->tail->tail = nullptr;
+    while (head_node_) {
+      TNode *next_node = head_node_->tail;
+      delete head_node_;
+      head_node_ = next_node;
+    }
+  }
+
  public:
   ///                 <----------List Functions---------->
-  list() noexcept: head_node_(nullptr), size_(0) {};
-  explicit list(size_type n): size_(n) {
-    if (n < 0)
-      throw std::bad_alloc();
-
-    TNode * cur_head = nullptr;
-    TNode ** cur_tail = &head_node_;
+  list() : head_node_(new TNode()), size_(0){};
+  explicit list(size_type n) : head_node_(new TNode()), size_(n) {
     while (--n) {
-      try {
-        auto new_tail = new TNode(cur_head);
-        // TODO может можно вынести ?
-        // <-------------------------------->
-        cur_head = new_tail;
-
-        *cur_tail = new_tail;
-        cur_tail = &(new_tail->tail_);
-        // <-------------------------------->
-      } catch (const std::bad_alloc& error) {
-        // TODO (free if error)
-        throw error;
-      }
+      auto new_node = new TNode(head_node_->head, head_node_);
+      head_node_->tail->tail = new_node;
+      head_node_->head = new_node;
     }
   };
-  list(std::initializer_list<value_type> const &items): size_(items.size()) {
-    TNode * cur_head = nullptr;
-    TNode ** cur_tail = &head_node_;
+  list(std::initializer_list<value_type> const &items)
+      : head_node_(new TNode()), size_(items.size()) {
     for (auto item : items) {
-      try {
-        auto new_tail = new TNode(item, cur_head);
-        // TODO может можно вынести ?
-        // <-------------------------------->
-        cur_head = new_tail;
-
-        *cur_tail = new_tail;
-        cur_tail = &(new_tail->tail_);
-        // <-------------------------------->
-      } catch (const std::bad_alloc& error) {
-        // TODO (free if error)
-        throw error;
-      }
+      auto new_node = new TNode(item, head_node_->head, head_node_);
+      head_node_->tail->tail = new_node;
+      head_node_->head = new_node;
     }
   };
-  list(const list &l): size_(l.size_) {
-    TNode * cur_head = nullptr;
-    TNode ** cur_tail = &head_node_;
+  list(const list &l) : head_node_(new TNode()), size_(l.size_) {
     for (iterator item = l.begin(); item != l.end(); ++item) {
-      try {
-        auto new_tail = new TNode(*item, cur_head);
-        // TODO может можно вынести ?
-        // <-------------------------------->
-        cur_head = new_tail;
-
-        *cur_tail = new_tail;
-        cur_tail = &(new_tail->tail_);
-        // <-------------------------------->
-      } catch (const std::bad_alloc& error) {
-        // TODO (free if error)
-        throw error;
-      }
+      auto new_node = new TNode(*item, head_node_->head, head_node_);
+      head_node_->tail->tail = new_node;
+      head_node_->head = new_node;
     }
   }
   list(list &&l) noexcept : size_(l.size_), head_node_(l.head_node_) {
     l.size_ = 0;
     l.head_node_ = nullptr;
   }
-  ~list() {
-    delete head_node_;
-  }
-  list& operator=(list &&l) noexcept {
-    delete head_node_;
+  ~list() { ClearNodes(); }
+  list &operator=(list &&l) noexcept {
+    ClearNodes();
 
     size_ = l.size_;
     head_node_ = l.head_node_;
@@ -121,45 +85,149 @@ class list: Abstract<T> {
   }
 
   ///                 <----------List Element access---------->
-  [[nodiscard]] const_reference front() const{
-    if (empty())
-      throw std::logic_error("Список пуст");
-    return head_node_->data_;
+  [[nodiscard]] const_reference front() const noexcept {
+    return head_node_->tail->data;
   }
-  const_reference back();
+  [[nodiscard]] const_reference back() const noexcept {
+    return head_node_->head->data;
+  }
 
   ///                 <----------List Iterators---------->
-  const_reference begin();
-  const_reference end();
+  iterator begin() noexcept { return iterator(head_node_); }
+  iterator end() noexcept { return --iterator(head_node_); }
 
   ///                 <----------List Capacity---------->
-  [[nodiscard]] bool empty() const noexcept {return !size_; };
+  [[nodiscard]] bool empty() const noexcept { return !size_; };
   [[nodiscard]] size_type size() const noexcept { return size_; };
-  [[nodiscard]] size_type max_size() const noexcept {return std::numeric_limits<size_type>::max() / sizeof(TNode) / 2;};
+  [[nodiscard]] size_type max_size() const noexcept {
+    return std::numeric_limits<size_type>::max() / sizeof(TNode) / 2;
+  };
 
   ///                 <----------List Modifiers---------->
   void clear() {
-      size_ = 0;
+    size_ = 0;
 
-      delete head_node_;
-      head_node_ = nullptr;
+    // set nullptr end (cascade delete, not cycled)
+    head_node_->head->tail = nullptr;
+    delete head_node_;
+
+    head_node_ = new TNode();
   };
-  iterator insert(iterator pos, const_reference value);
-  void erase(iterator pos);
-  void push_back(const_reference value);
-  void pop_back();
+  iterator insert(iterator pos, const_reference value) {
+    auto new_node = new TNode(value, pos.GetNode()->head, pos.GetNode());
+    pos.GetNode()->head->tail = new_node;
+    pos.GetNode()->head = new_node;
 
+    ++size_;
+
+    return --pos;
+  }
+  void erase(iterator pos) {
+    pos.GetNode()->tail->head = pos.GetNode()->head;
+    pos.GetNode()->head->tail = pos.GetNode()->tail;
+    delete pos.GetNode();
+  }
+  void push_back(const_reference value) noexcept {
+    auto new_node = new TNode(value, head_node_->head, head_node_);
+    head_node_->tail->tail = new_node;
+    head_node_->head = new_node;
+
+    ++size_;
+  }
+  void pop_back() noexcept {
+    if (size()) {
+      TNode *end = head_node_->head;
+      end->tail = nullptr;
+
+      head_node_->head = end->head;
+      end->head->tail = head_node_;
+
+      delete end;  // указываем
+      --size_;
+    }
+  }
   void swap(list &other) noexcept {
     std::swap(head_node_, other.head_node_);
     std::swap(size_, other.size_);
   }
+  void push_front(const_reference value) noexcept {
+    auto new_node = new TNode(value, head_node_, head_node_->tail);
+    head_node_->tail->head = new_node;
+    head_node_->tail = new_node;
 
-  void push_front(const_reference value);
-  void pop_front();
-  void merge(list &other);
-  void splice(const_iterator pos, list& other);
-  void reverse();
-  void unique();
+    ++size_;
+  }
+  void pop_front() noexcept {
+    if (size()) {
+      TNode *front = head_node_->tail;
+      front->tail = nullptr;
+
+      head_node_->tail = front->tail;
+      front->tail->head = head_node_;
+
+      delete front;  // указываем
+      --size_;
+    }
+  }
+  void merge(list &other) {
+    if (*this != other) {
+      if (!size()) {
+        auto this_front = begin();
+        auto this_end = end();
+
+        for (auto other_front = other.begin(); other_front != other.end();) {
+          if (this_front == this_end) {
+            push_back(*other_front);
+          } else if (*this_front < *other_front) {
+            ++this_front;
+          } else {
+            insert(this_front, *other_front);
+            ++other_front;
+          }
+        }
+      }
+
+      if (other.size()) other.clear();
+    }
+  }
+  void splice(const_iterator pos, list &other) {
+    TNode *cur_node = pos.GetNode();
+    if (*this != other) {
+      for (auto other_front = other.begin(); other_front != other.end();
+           ++other_front) {
+        other_front.GetNode()->head = cur_node;
+        other_front.GetNode()->tail = cur_node->tail;
+
+        cur_node->tail->head = other_front;
+        cur_node->tail = other_front;
+
+        cur_node = other_front.GetNode();
+        ++size_;
+      }
+    }
+  }
+  void reverse() {
+    auto tmp_nodes = head_node_;
+    while (tmp_nodes != head_node_) {
+      auto next_node = tmp_nodes->tail;
+      swap(tmp_nodes->tail, tmp_nodes->head);
+      tmp_nodes = next_node;
+    }
+  }
+  void unique() {
+    for (auto iter_node = ++begin(); iter_node != end();) {
+      if (*(--iter_node) == *iter_node) {
+        TNode *remove_node = iter_node.GetNode();
+        ++iter_node;
+
+        remove_node->head->tail = remove_node->tail;
+        remove_node->tail->head = remove_node->head;
+        delete remove_node;
+      } else {
+        ++iter_node;
+      }
+    }
+  }
   void sort();
 };
 
