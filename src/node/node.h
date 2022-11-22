@@ -53,20 +53,10 @@ class NodeIterator {
     return *this;
   }
   bool operator==(const NodeIterator<value_type>& other) const noexcept {
-    TNode* this_head = head_node_;
-    TNode* other_head = other.head_node_;
-
-    while (this_head == other_head) {
-      this_head = this_head->tail;
-      other_head = other_head->tail;
-      if (head_node_->head == this_head || other.head_node_->head == other_head)
-        break;
-    }
-
-    return this_head == other_head;
+    return head_node_ == other.head_node_;
   }
   bool operator!=(const NodeIterator<value_type>& other) const noexcept {
-    return !(*this == other);
+    return head_node_ != other.head_node_;
   }
   value_type operator*() const noexcept { return head_node_->data; }
 };

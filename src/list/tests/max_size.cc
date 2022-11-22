@@ -2,9 +2,10 @@
 // Created by Nana Daughterless on 11/15/22.
 //
 
+#include <gtest/gtest.h>
+
 #include <list>
 
-#include "gtest/gtest.h"
 #include "list/list.h"
 
 template <typename T>

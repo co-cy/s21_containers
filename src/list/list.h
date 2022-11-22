@@ -211,8 +211,8 @@ class list {
     } while (tmp_nodes != head_node_);
   }
   void unique() {
-    for (auto iter_node = ++begin(); iter_node != end();) {
-      if (*(--iter_node) == *iter_node) {
+    for (auto last_iter = begin(), iter_node = ++begin(); iter_node != end();) {
+      if (*(last_iter) == *iter_node) {
         TNode *remove_node = iter_node.GetNode();
         ++iter_node;
 
@@ -222,6 +222,7 @@ class list {
 
         --size_;
       } else {
+        ++last_iter;
         ++iter_node;
       }
     }
