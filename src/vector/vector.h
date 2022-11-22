@@ -29,13 +29,6 @@ class vector {
   vector() : size_(0), capacity_(0), array_(new value_type[0]) {}
   explicit vector(size_type n)
       : size_(n), capacity_(2 * size_), array_(new value_type[capacity_]) {}
-  vector(std::initializer_list<value_type> const &items)
-      : size_(items.size()),
-        capacity_(2 * size_),
-        array_(new value_type[capacity_]) {
-    int index = -1;
-    for (auto item : items) array_[++index] = item;
-  }
   vector(const vector &v)
       : size_(v.size_),
         capacity_(2 * size_),
@@ -43,6 +36,13 @@ class vector {
     int index = -1;
     for (auto iter = v.begin(); iter != v.end(); ++iter)
       array_[++index] = *iter;
+  }
+  vector(std::initializer_list<value_type> const &items)
+      : size_(items.size()),
+        capacity_(2 * size_),
+        array_(new value_type[capacity_]) {
+    int index = -1;
+    for (auto item : items) array_[++index] = item;
   }
   vector(const vector &&v) noexcept
       : size_(v.size_),
