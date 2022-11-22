@@ -191,14 +191,18 @@ class list {
     if (*this != other) {
       for (auto other_front = other.begin(); other_front != other.end();
            ++other_front) {
-        other_front.GetNode()->head = cur_node;
-        other_front.GetNode()->tail = cur_node->tail;
+        other_front.GetNode()->head = cur_node->head;
+        cur_node->head->tail = other_front.GetNode();
 
-        cur_node->tail->head = other_front;
-        cur_node->tail = other_front;
+        other_front.GetNode()->tail = cur_node;
+        cur_node->head = other_front.GetNode();
 
-        cur_node = other_front.GetNode();
         ++size_;
+      }
+      if (other.size()) {
+        other.size_ = 0;
+        other.head_node_->head = other.head_node_;
+        other.head_node_->tail = other.head_node_;
       }
     }
   }
