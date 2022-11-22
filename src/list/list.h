@@ -127,7 +127,7 @@ class list {
   }
   void push_back(const_reference value) noexcept {
     auto new_node = new TNode(value, head_node_->head, head_node_);
-    head_node_->tail->tail = new_node;
+    head_node_->head->tail = new_node;
     head_node_->head = new_node;
 
     ++size_;
@@ -135,7 +135,6 @@ class list {
   void pop_back() noexcept {
     if (size()) {
       TNode *end = head_node_->head;
-      end->tail = nullptr;
 
       head_node_->head = end->head;
       end->head->tail = head_node_;
