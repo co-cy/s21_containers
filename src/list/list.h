@@ -117,11 +117,13 @@ class list {
     return --pos;
   }
   void erase(iterator pos) {
-    pos.GetNode()->tail->head = pos.GetNode()->head;
-    pos.GetNode()->head->tail = pos.GetNode()->tail;
-    delete pos.GetNode();
+    if (size_) {
+      pos.GetNode()->tail->head = pos.GetNode()->head;
+      pos.GetNode()->head->tail = pos.GetNode()->tail;
+      delete pos.GetNode();
 
-    --size_;
+      --size_;
+    }
   }
   void push_back(const_reference value) noexcept {
     auto new_node = new TNode(value, head_node_->head, head_node_);
