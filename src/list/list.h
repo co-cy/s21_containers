@@ -13,7 +13,7 @@ class list {
  public:
   ///                 <----------List Member type---------->
   using value_type = T;
-  using reference = value_type &;
+  using reference [[maybe_unused]] = value_type &;
   using const_reference = const value_type &;
   using size_type = std::size_t;
   using iterator = NodeIterator<T>;
@@ -204,11 +204,11 @@ class list {
   }
   void reverse() {
     auto tmp_nodes = head_node_;
-    while (tmp_nodes != head_node_) {
+    do {
       auto next_node = tmp_nodes->tail;
-      swap(tmp_nodes->tail, tmp_nodes->head);
+      std::swap(tmp_nodes->tail, tmp_nodes->head);
       tmp_nodes = next_node;
-    }
+    } while (tmp_nodes != head_node_);
   }
   void unique() {
     for (auto iter_node = ++begin(); iter_node != end();) {
