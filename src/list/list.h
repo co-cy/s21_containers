@@ -157,7 +157,6 @@ class list {
   void pop_front() noexcept {
     if (size()) {
       TNode *front = head_node_->tail;
-      front->tail = nullptr;
 
       head_node_->tail = front->tail;
       front->tail->head = head_node_;
