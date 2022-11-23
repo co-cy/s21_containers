@@ -21,7 +21,7 @@ add_executable(list_test
 target_link_libraries(list_test gtest gtest_main)
 
 add_executable(vector_test
-        vector/tests/construct.cc)
+        vector/tests/construct.cc vector/tests/front.cc vector/tests/back.cc)
 
 
 target_link_libraries(vector_test gtest gtest_main)

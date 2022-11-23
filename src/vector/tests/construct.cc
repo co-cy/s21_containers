@@ -11,8 +11,8 @@ struct VectorConstructorTest : public testing::Test {
   using Vector = s21::vector<T>;
 };
 
-using VectorConstructTypes = ::testing::Types<char, int, long double>;
-TYPED_TEST_SUITE(VectorConstructorTest, VectorConstructTypes);
+using VectorConstructorTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(VectorConstructorTest, VectorConstructorTypes);
 
 TYPED_TEST(VectorConstructorTest, empty) {
   using Vector = typename TestFixture::Vector;

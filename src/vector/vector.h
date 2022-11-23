@@ -28,19 +28,19 @@ class vector {
   ///                 <----------Vector Member functions---------->
   vector() : size_(0), capacity_(0), array_(new value_type[0]) {}
   explicit vector(size_type n)
-      : size_(n), capacity_(2 * size_), array_(new value_type[capacity_]) {}
+      : size_(n), capacity_(2 * n), array_(new value_type[2 * n]) {}
   vector(const vector &v)
       : size_(v.size_),
-        capacity_(2 * size_),
-        array_(new value_type[capacity_]) {
+        capacity_(2 * v.size_),
+        array_(new value_type[2 * v.size_]) {
     int index = -1;
     for (auto iter = v.begin(); iter != v.end(); ++iter)
       array_[++index] = *iter;
   }
   vector(std::initializer_list<value_type> const &items)
       : size_(items.size()),
-        capacity_(2 * size_),
-        array_(new value_type[capacity_]) {
+        capacity_(2 * items.size()),
+        array_(new value_type[2 * items.size()]) {
     int index = -1;
     for (auto item : items) array_[++index] = item;
   }
