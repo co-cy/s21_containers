@@ -33,6 +33,8 @@ class Tree {
           left_elem_(nullptr),
           right_elem_(nullptr),
           value_(value) {}
+    // TreeNode(const value_type &value, TreeNode * parent, TreeNode *
+    // left_elem, TreeNode * right_elem) :
   };
 
   class TreeIterator
@@ -114,15 +116,20 @@ class Tree {
     delete root;
   }
 
- public:
-  Tree() {
-    fake = new TreeNode();
+  void root_is_fake() {
     fake->parent_ = fake;
     fake->left_elem_ = fake;
     fake->parent_ = fake;
     root_node = fake;
     tree_size = 0;
   }
+
+ public:
+  Tree() {
+    fake = new TreeNode();
+    root_is_fake();
+  }
+
   Tree(std::initializer_list<value_type> const &items);
   Tree(const Tree &other) {}
   Tree(Tree &&other)
@@ -153,7 +160,7 @@ class Tree {
     if (root->right_elem_) tree_print(root->right_elem_);
   }
 
-  // Tree &operator=(Tree &&other) { return *this; }
+  Tree &operator=(Tree &&other) { return *this; }
 
   iterator begin() { return TreeIterator(fake->right_elem_); }
   iterator end() { return TreeIterator(fake); }
@@ -166,11 +173,7 @@ class Tree {
     if (!empty()) {
       DestroyNode(root_node);
     }
-    fake->parent_ = fake;
-    fake->left_elem_ = fake;
-    fake->parent_ = fake;
-    root_node = fake;
-    tree_size = 0;
+    root_is_fake();
   }
   std::pair<iterator, bool> insert(const value_type &value) {
     iterator iter = default_insert(value);
@@ -178,6 +181,16 @@ class Tree {
   }
   void erase(iterator pos) {
     TreeNode *curr_pos = pos.curr_node;
+    if (curr_pos == fake->left_elem_) {
+      iterator buff = pos;
+      buff++;
+      fake->left_elem_ = buff.curr_node;
+    } else if (curr_pos == fake->right_elem_) {
+      iterator buff = pos;
+      buff--;
+      std::cout << *buff << std::endl;
+      fake->right_elem_ = buff.curr_node;
+    }
     if (!curr_pos->left_elem_ && !curr_pos->right_elem_) {
       if (curr_pos == curr_pos->parent_->left_elem_) {
         curr_pos->parent_->left_elem_ = nullptr;
@@ -214,32 +227,14 @@ class Tree {
   // void merge(Tree &other);
 
   iterator find(const key_type &key) {
-    TreeNode *current = root_node;
-    while (true) {
-      if (current == nullptr) {
-        return nullptr;
-      } else if (root_node->value_ == key) {
-        return iterator(current);
-      } else if (current->value_ > key) {
-        current = current->left_elem_;
-      } else {
-        current = current->rigth_elem_;
-      }
-    }
+    TreeNode *sol = find_contains(key);
+    if (sol == nullptr) return nullptr;
+    return iterator(sol);
   }
   bool contains(const key_type &key) {
-    TreeNode *current = root_node;
-    while (true) {
-      if (current == nullptr) {
-        return false;
-      } else if (root_node->value_ == key) {
-        return true;
-      } else if (current->value_ > key) {
-        current = current->left_elem_;
-      } else {
-        current = current->rigth_elem_;
-      }
-    }
+    TreeNode *sol = find_contains(key);
+    if (sol == nullptr) return false;
+    return true;
   }
 
  private:
@@ -281,6 +276,22 @@ class Tree {
     }
     ++tree_size;
     return TreeIterator(new_node);
+  }
+
+  TreeNode *find_contains(const key_type &key) {
+    if (empty()) return nullptr;
+    TreeNode *current = root_node;
+    while (true) {
+      if (current == nullptr) {
+        return nullptr;
+      } else if (current->value_ == key) {
+        return current;
+      } else if (current->value_ > key) {
+        current = current->left_elem_;
+      } else {
+        current = current->rigth_elem_;
+      }
+    }
   }
 };
 
