@@ -33,8 +33,6 @@ class Tree {
           left_elem_(nullptr),
           right_elem_(nullptr),
           value_(value) {}
-    // TreeNode(const value_type &value, TreeNode * parent, TreeNode *
-    // left_elem, TreeNode * right_elem) :
   };
 
   class TreeIterator
@@ -124,14 +122,31 @@ class Tree {
     tree_size = 0;
   }
 
+  void copy_tree(const TreeNode *other) {
+    default_insert(other->value_);
+    if (other->left_elem_)
+    copy_tree(other->left_elem_);
+    if (other->right_elem_)
+    copy_tree(other->right_elem_);
+  }
+
  public:
   Tree() {
     fake = new TreeNode();
     root_is_fake();
   }
-
-  Tree(std::initializer_list<value_type> const &items);
-  Tree(const Tree &other) {}
+  Tree(std::initializer_list<value_type> const &items) {
+    fake = new TreeNode();
+    root_is_fake();
+    for (value_type value: items) {
+      insert(value);
+    }
+  }
+  Tree(const Tree &other) {
+    fake = new TreeNode();
+    root_is_fake();
+    copy_tree(other.root_node);
+  }
   Tree(Tree &&other)
       : root_node(other.root_node),
         fake(other.fake),
@@ -160,7 +175,7 @@ class Tree {
     if (root->right_elem_) tree_print(root->right_elem_);
   }
 
-  Tree &operator=(Tree &&other) { return *this; }
+  Tree &operator=(Tree &&other) {}
 
   iterator begin() { return TreeIterator(fake->right_elem_); }
   iterator end() { return TreeIterator(fake); }
@@ -223,8 +238,15 @@ class Tree {
     delete pos.curr_node;
   }
 
-  // void swap(Tree &other);
-  // void merge(Tree &other);
+  void swap(Tree &other) {
+    std::swap(root_node,other.root_node);
+    std::swap(fake, other.fake);
+    std::swap(tree_size,other.tree_size);
+  }
+
+  void merge(Tree &other) {
+    
+  }
 
   iterator find(const key_type &key) {
     TreeNode *sol = find_contains(key);
