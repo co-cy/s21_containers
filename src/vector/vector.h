@@ -109,28 +109,32 @@ class vector {
   void clear() { size_ = 0; }
   iterator insert(iterator pos, const_reference value) {
     size_type shift = pos - array_;
+    ++size_;
 
-    if (size_ + 1 > capacity_) {
+    if (size_ > capacity_) {
       if (!capacity_)
-        reserve(1);
+        reserve(size_);
       else
         reserve(2 * capacity_);
     }
 
-    for (auto i = shift + 1; i < size_; ++i) array_[i] = array_[i - 1];
+    for (auto i = shift + 1; i < size_ - 1; ++i) array_[i] = array_[i - 1];
     array_[shift] = value;
-
-    ++size_;
 
     return array_ + shift;
   }
   void erase(iterator pos) {
     for (auto i = pos; i != end(); ++i) *i = *(i + 1);
-    --size_;
+    if (size_) --size_;
   }
   void push_back(const_reference value) {
     ++size_;
-    if (size_ >= capacity_) reserve(2 * size_);
+    if (size_ > capacity_) {
+      if (!capacity_)
+        reserve(size_);
+      else
+        reserve(2 * capacity_);
+    }
 
     array_[size_ - 2] = value;
   }
