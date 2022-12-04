@@ -73,7 +73,7 @@ class vector {
     if (pos >= size_) throw std::out_of_range("Out of array range");
     return array_[pos - 1];
   }
-  reference operator[](size_type pos) { return array_[pos - 1]; }
+  reference operator[](size_type pos) { return array_[pos]; }
   iterator data() { return array_; }
 
   ///                 <----------Vector Iterators---------->
