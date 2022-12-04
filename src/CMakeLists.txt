@@ -21,7 +21,7 @@ add_executable(list_test
 target_link_libraries(list_test gtest gtest_main)
 
 add_executable(vector_test
-        vector/tests/construct.cc vector/tests/front.cc vector/tests/back.cc vector/tests/at.cc vector/tests/operator[].cc vector/tests/data.cpp vector/tests/max_size.cpp)
+        vector/tests/construct.cc vector/tests/front.cc vector/tests/back.cc vector/tests/at.cc vector/tests/operator[].cc vector/tests/data.cpp vector/tests/max_size.cpp vector/tests/capacity.cpp vector/tests/shrink_to_fit.cpp)
 
 
 target_link_libraries(vector_test gtest gtest_main)

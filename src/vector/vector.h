@@ -88,7 +88,7 @@ class vector {
   }
   void reserve(size_type size) {
     if (size > capacity_) {
-      value_type new_array = new value_type[size];
+      auto new_array = new value_type[size];
       for (size_type i = 0; i < size_ && i < size; ++i)
         new_array[i] = array_[i];
       delete array_;
@@ -100,7 +100,7 @@ class vector {
   size_type capacity() { return capacity_; }
   void shrink_to_fit() {
     if (size_ != capacity_) {
-      value_type new_array = new value_type[size_];
+      auto new_array = new value_type[size_];
       for (size_type i = 0; i < size_; ++i) new_array[i] = array_[i];
       delete array_;
 
