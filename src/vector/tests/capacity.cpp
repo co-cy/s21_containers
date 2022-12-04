@@ -21,14 +21,14 @@ TYPED_TEST(VectorCapacityTest, empty) {
 TYPED_TEST(VectorCapacityTest, size_n) {
   using Vector = typename TestFixture::Vector;
   EXPECT_DOUBLE_EQ(Vector(0).capacity(), 0);
-  EXPECT_DOUBLE_EQ(Vector(1).capacity(), 2);
-  EXPECT_DOUBLE_EQ(Vector(8).capacity(), 16);
+  EXPECT_DOUBLE_EQ(Vector(1).capacity(), 1);
+  EXPECT_DOUBLE_EQ(Vector(8).capacity(), 8);
 }
 
 TYPED_TEST(VectorCapacityTest, initializer_list) {
   using Vector = typename TestFixture::Vector;
   EXPECT_DOUBLE_EQ(Vector({}).capacity(), 0);
-  EXPECT_DOUBLE_EQ(Vector({TypeParam()}).capacity(), 2);
+  EXPECT_DOUBLE_EQ(Vector({TypeParam()}).capacity(), 1);
   EXPECT_DOUBLE_EQ(Vector({TypeParam(), TypeParam(), TypeParam()}).capacity(),
-                   6);
+                   3);
 }

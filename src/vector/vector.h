@@ -28,26 +28,22 @@ class vector {
   ///                 <----------Vector Member functions---------->
   vector() : size_(0), capacity_(0), array_(new value_type[0]) {}
   explicit vector(size_type n)
-      : size_(n), capacity_(2 * n), array_(new value_type[2 * n]) {}
+      : size_(n), capacity_(n), array_(new value_type[n]) {}
   vector(const vector &v)
-      : size_(v.size_),
-        capacity_(2 * v.size_),
-        array_(new value_type[2 * v.size_]) {
+      : size_(v.size_), capacity_(v.size_), array_(new value_type[v.size_]) {
     int index = -1;
     for (auto iter = v.begin(); iter != v.end(); ++iter)
       array_[++index] = *iter;
   }
   vector(std::initializer_list<value_type> const &items)
       : size_(items.size()),
-        capacity_(2 * items.size()),
-        array_(new value_type[2 * items.size()]) {
+        capacity_(items.size()),
+        array_(new value_type[items.size()]) {
     int index = -1;
     for (auto item : items) array_[++index] = item;
   }
   vector(const vector &&v) noexcept
-      : size_(v.size_),
-        capacity_(2 * size_),
-        array_(new value_type[capacity_]) {
+      : size_(v.size_), capacity_(v.capacity_), array_(v.array_) {
     v.size_ = 0;
     v.capacity_ = 0;
     v.array_ = nullptr;
@@ -71,7 +67,7 @@ class vector {
   const_reference back() { return array_[size_ - 1]; }
   reference at(size_type pos) {
     if (pos >= size_) throw std::out_of_range("Out of array range");
-    return array_[pos - 1];
+    return array_[pos];
   }
   reference operator[](size_type pos) { return array_[pos]; }
   iterator data() { return array_; }
@@ -112,11 +108,21 @@ class vector {
   ///                 <----------Vector Modifiers---------->
   void clear() { size_ = 0; }
   iterator insert(iterator pos, const_reference value) {
-    if (size_ + 1 >= capacity_) reserve(2 * (size_ + 1));
+    size_type shift = pos - array_;
 
-    for (auto i = pos + 1; i != end(); ++i) *i = *(i - 1);
-    *pos = value;
+    if (size_ + 1 > capacity_) {
+      if (!capacity_)
+        reserve(1);
+      else
+        reserve(2 * capacity_);
+    }
+
+    for (auto i = shift + 1; i < size_; ++i) array_[i] = array_[i - 1];
+    array_[shift] = value;
+
     ++size_;
+
+    return array_ + shift;
   }
   void erase(iterator pos) {
     for (auto i = pos; i != end(); ++i) *i = *(i + 1);
