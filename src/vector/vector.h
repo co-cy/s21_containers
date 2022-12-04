@@ -109,16 +109,17 @@ class vector {
   void clear() { size_ = 0; }
   iterator insert(iterator pos, const_reference value) {
     size_type shift = pos - array_;
-    ++size_;
 
-    if (size_ > capacity_) {
+    if (size_ + 1 > capacity_) {
       if (!capacity_)
-        reserve(size_);
+        reserve(size_ + 1);
       else
         reserve(2 * capacity_);
     }
 
-    for (auto i = shift + 1; i < size_ - 1; ++i) array_[i] = array_[i - 1];
+    for (auto i = shift + 1; i < size_; ++i) array_[i] = array_[i - 1];
+
+    ++size_;
     array_[shift] = value;
 
     return array_ + shift;
@@ -128,17 +129,19 @@ class vector {
     if (size_) --size_;
   }
   void push_back(const_reference value) {
-    ++size_;
-    if (size_ > capacity_) {
+    if (size_ + 1 > capacity_) {
       if (!capacity_)
-        reserve(size_);
+        reserve(size_ + 1);
       else
         reserve(2 * capacity_);
     }
 
-    array_[size_ - 2] = value;
+    ++size_;
+    array_[size_ - 1] = value;
   }
-  void pop_back() { --size_; }
+  void pop_back() {
+    if (size_) --size_;
+  }
   void swap(vector &other) {
     std::swap(array_, other.array_);
     std::swap(capacity_, other.capacity_);
