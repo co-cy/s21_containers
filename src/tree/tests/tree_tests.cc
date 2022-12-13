@@ -18,7 +18,6 @@ TEST(test, TreeMain) {
   --a;
   ASSERT_TRUE(*a == -101);
   --a;
-
   auto b = new_tree.end();
   --b;
   ASSERT_TRUE(*b == 3);
@@ -131,12 +130,4 @@ auto iter4 = new_tree.end();
   cout<<"ok4 "<< *iter4<<endl;
   EXPECT_EQ(*iter4, 1);
 
-
-
-
-}
-
-int main(int argc, char** argv) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }
