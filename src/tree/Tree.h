@@ -279,20 +279,35 @@ class Tree {
 
   void merge(Tree &other) {
     default_merge(other,other.root_node);
-    DestroyNode(other.root_node);
-    other.root_is_fake();
   }
 
   iterator find(const key_type &key) {
     TreeNode *sol = find_contains(key);
-    if (sol == nullptr) return nullptr;
+    if (sol->value_ != key) return nullptr;
     return iterator(sol);
   }
   bool contains(const key_type &key) {
     TreeNode *sol = find_contains(key);
-    if (sol == nullptr) return false;
+    if (!sol || sol->value_ != key) return false;
     return true;
   }
+
+  iterator lower_bound(const key_type& key) {
+    TreeNode* node = find_contains(key);
+    iterator sol = iterator(node); 
+    if (node->value_ <key)
+      ++sol;
+    return sol;
+  }
+
+  iterator upper_bound(const key_type& key) {
+    TreeNode* node = find_contains(key);
+    iterator sol = iterator(node); 
+    while (*sol<=key)
+      ++sol;
+    return sol;
+  }
+
 
  protected:
   void default_merge(Tree & other, TreeNode * item) {
@@ -354,8 +369,12 @@ class Tree {
       } else if (current->value_ == key) {
         return current;
       } else if (current->value_ > key) {
+        if (!current->left_elem_)
+          return current;
         current = current->left_elem_;
       } else {
+        if (!current->right_elem_)
+          return current;
         current = current->right_elem_;
       }
     }

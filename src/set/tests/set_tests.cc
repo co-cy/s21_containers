@@ -8,10 +8,15 @@ TEST(test, ConstructorsList) {
     s21::set<int> new_set;
 
     std::initializer_list<int> items{2,1,3,4};
+    std::cout << "ok1" <<std::endl;
+
     s21::set<int>my_set2(items);
     std::set<int>std_set2(items);
+    std::cout << "ok1" <<std::endl;
     auto my_iter = my_set2.begin();
     auto std_iter = std_set2.begin();
+    std::cout << "ok1" <<std::endl;
+
     while(my_iter != my_set2.end()) {
         ASSERT_TRUE(*my_iter == *std_iter);
         ++my_iter;
