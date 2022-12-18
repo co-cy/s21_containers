@@ -74,6 +74,12 @@ add_executable(array_test
         array/tests/fill.cpp)
 target_link_libraries(array_test gtest gtest_main)
 
+add_executable(queue_test
+        queue/queue.h
+        queue/tests/construct.cpp)
+target_link_libraries(queue_test gtest gtest_main)
+
+
 add_executable(stack_test
         stack/stack.h
         stack/tests/top.cpp
