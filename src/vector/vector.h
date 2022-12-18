@@ -26,21 +26,24 @@ class vector {
 
  public:
   ///                 <----------Vector Member functions---------->
-  vector() : size_(0), capacity_(0), array_(new value_type[0]) {}
+  vector() : size_(0U), capacity_(0U), array_(new value_type[0U]) {}
   explicit vector(size_type n)
       : size_(n), capacity_(n), array_(new value_type[n]) {}
   vector(const vector &v)
       : size_(v.size_), capacity_(v.size_), array_(new value_type[v.size_]) {
     int index = -1;
-    for (auto iter = v.begin(); iter != v.end(); ++iter)
+    for (auto iter = v.begin(); iter != v.end(); ++iter) {
       array_[++index] = *iter;
+    }
   }
   vector(std::initializer_list<value_type> const &items)
       : size_(items.size()),
         capacity_(items.size()),
         array_(new value_type[items.size()]) {
     int index = -1;
-    for (auto item : items) array_[++index] = item;
+    for (auto item : items) {
+      array_[++index] = item;
+    }
   }
   vector(const vector &&v) noexcept
       : size_(v.size_), capacity_(v.capacity_), array_(v.array_) {
@@ -66,7 +69,10 @@ class vector {
   const_reference front() const noexcept { return array_[0]; }
   const_reference back() const noexcept { return array_[size_ - 1]; }
   reference at(size_type pos) {
-    if (pos >= size_) throw std::out_of_range("Out of array range");
+    if (pos >= size_) {
+      throw std::out_of_range("Out of array range");
+    }
+
     return array_[pos];
   }
   reference operator[](size_type pos) noexcept { return array_[pos]; }
@@ -77,7 +83,7 @@ class vector {
   iterator end() noexcept { return array_ + size_; }
 
   ///                 <----------Vector Capacity---------->
-  [[nodiscard]] bool empty() const noexcept { return !size_; }
+  [[nodiscard]] bool empty() const noexcept { return size_ == 0U; }
   [[nodiscard]] size_type size() const noexcept { return size_; }
   [[nodiscard]] size_type max_size() const {
     return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2;
@@ -85,8 +91,9 @@ class vector {
   void reserve(size_type size) {
     if (size > capacity_) {
       auto new_array = new value_type[size];
-      for (size_type i = 0; i < size_ && i < size; ++i)
+      for (size_type i = 0U; i < size_ && i < size; ++i) {
         new_array[i] = array_[i];
+      }
       delete array_;
 
       array_ = new_array;
@@ -97,7 +104,9 @@ class vector {
   void shrink_to_fit() {
     if (size_ != capacity_) {
       auto new_array = new value_type[size_];
-      for (size_type i = 0; i < size_; ++i) new_array[i] = array_[i];
+      for (size_type i = 0U; i < size_; ++i) {
+        new_array[i] = array_[i];
+      }
       delete array_;
 
       array_ = new_array;
@@ -106,18 +115,21 @@ class vector {
   }
 
   ///                 <----------Vector Modifiers---------->
-  void clear() noexcept { size_ = 0; }
+  void clear() noexcept { size_ = 0U; }
   iterator insert(iterator pos, const_reference value) {
     size_type shift = pos - array_;
 
-    if (size_ + 1 > capacity_) {
-      if (!capacity_)
-        reserve(size_ + 1);
-      else
-        reserve(2 * capacity_);
+    if (size_ + 1U > capacity_) {
+      if (capacity_ == 0U) {
+        reserve(size_ + 1U);
+      } else {
+        reserve(2U * capacity_);
+      }
     }
 
-    for (auto i = shift + 1; i < size_; ++i) array_[i] = array_[i - 1];
+    for (auto i = shift + 1U; i < size_; ++i) {
+      array_[i] = array_[i - 1U];
+    }
 
     ++size_;
     array_[shift] = value;
@@ -125,22 +137,29 @@ class vector {
     return array_ + shift;
   }
   void erase(iterator pos) noexcept {
-    for (auto i = pos; i != end(); ++i) *i = *(i + 1);
-    if (size_) --size_;
+    for (auto i = pos; i != end(); ++i) {
+      *i = *(i + 1U);
+    }
+    if (size_ > 0U) {
+      --size_;
+    }
   }
   void push_back(const_reference value) {
-    if (size_ + 1 > capacity_) {
-      if (!capacity_)
-        reserve(size_ + 1);
-      else
-        reserve(2 * capacity_);
+    if (size_ + 1U > capacity_) {
+      if (capacity_ == 0U) {
+        reserve(size_ + 1U);
+      } else {
+        reserve(2U * capacity_);
+      }
     }
 
     ++size_;
-    array_[size_ - 1] = value;
+    array_[size_ - 1U] = value;
   }
   void pop_back() noexcept {
-    if (size_) --size_;
+    if (size_ > 0U) {
+      --size_;
+    }
   }
   void swap(vector &other) noexcept {
     std::swap(array_, other.array_);
