@@ -22,19 +22,19 @@ TYPED_TEST(VectorSwapTest, empty) {
 
 TYPED_TEST(VectorSwapTest, size_0) {
   using Vector = typename TestFixture::Vector;
-  Vector a{0}, b{0};
+  Vector a(0U), b(0U);
   EXPECT_NO_THROW(a.swap(b));
 }
 
 TYPED_TEST(VectorSwapTest, size_1) {
   using Vector = typename TestFixture::Vector;
-  Vector a{1}, b{1};
+  Vector a(1), b(1);
   EXPECT_NO_THROW(a.swap(b));
 }
 
 TYPED_TEST(VectorSwapTest, size_8) {
   using Vector = typename TestFixture::Vector;
-  Vector a{4}, b{8};
+  Vector a(4), b(8);
   EXPECT_NO_THROW(a.swap(b));
 
   EXPECT_EQ(a.size(), 8);

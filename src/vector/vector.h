@@ -49,7 +49,7 @@ class vector {
       : size_(v.size_), capacity_(v.capacity_), array_(v.array_) {
     v.size_ = 0;
     v.capacity_ = 0;
-    v.array_ = nullptr;
+    v.array_ = new value_type[0U];
   }
   ~vector() { delete[] array_; }
   vector &operator=(vector &&v) noexcept {
@@ -60,14 +60,14 @@ class vector {
     v.capacity_ = 0;
 
     array_ = v.array_;
-    v.array_ = nullptr;
+    v.array_ = new value_type[0U];
 
     return *this;
   }
 
   ///                 <----------Vector Element access---------->
   const_reference front() const noexcept { return array_[0]; }
-  const_reference back() const noexcept { return array_[size_ - 1]; }
+  const_reference back() const noexcept { return array_[size_ - 1U]; }
   reference at(size_type pos) {
     if (pos >= size_) {
       throw std::out_of_range("Out of array range");
@@ -86,17 +86,17 @@ class vector {
   [[nodiscard]] bool empty() const noexcept { return size_ == 0U; }
   [[nodiscard]] size_type size() const noexcept { return size_; }
   [[nodiscard]] size_type max_size() const {
-    return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2;
+    return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2U;
   }
   void reserve(size_type size) {
     if (size > capacity_) {
       auto new_array = new value_type[size];
       for (size_type i = 0U; i < size_ && i < size; ++i) {
-        new_array[i] = array_[i];
+        new_array[i] = std::move(array_[i]);
       }
-      delete array_;
+      delete[] array_;
 
-      array_ = new_array;
+      array_ = std::move(new_array);
       capacity_ = size;
     }
   }
@@ -105,11 +105,11 @@ class vector {
     if (size_ != capacity_) {
       auto new_array = new value_type[size_];
       for (size_type i = 0U; i < size_; ++i) {
-        new_array[i] = array_[i];
+        new_array[i] = std::move(array_[i]);
       }
-      delete array_;
+      delete[] array_;
 
-      array_ = new_array;
+      array_ = std::move(new_array);
       capacity_ = size_;
     }
   }
@@ -128,7 +128,7 @@ class vector {
     }
 
     for (auto i = shift + 1U; i < size_; ++i) {
-      array_[i] = array_[i - 1U];
+      array_[i] = std::move(array_[i - 1U]);
     }
 
     ++size_;
@@ -138,7 +138,11 @@ class vector {
   }
   void erase(iterator pos) noexcept {
     for (auto i = pos; i != end(); ++i) {
-      *i = *(i + 1U);
+      auto next = i + 1U;
+
+      if (next != end()) {
+        *i = std::move(*next);
+      }
     }
     if (size_ > 0U) {
       --size_;
