@@ -63,23 +63,23 @@ class vector {
   }
 
   ///                 <----------Vector Element access---------->
-  const_reference front() { return array_[0]; }
-  const_reference back() { return array_[size_ - 1]; }
+  const_reference front() const noexcept { return array_[0]; }
+  const_reference back() const noexcept { return array_[size_ - 1]; }
   reference at(size_type pos) {
     if (pos >= size_) throw std::out_of_range("Out of array range");
     return array_[pos];
   }
-  reference operator[](size_type pos) { return array_[pos]; }
-  iterator data() { return array_; }
+  reference operator[](size_type pos) noexcept { return array_[pos]; }
+  iterator data() noexcept { return array_; }
 
   ///                 <----------Vector Iterators---------->
-  iterator begin() { return array_; }
-  iterator end() { return array_ + size_; }
+  iterator begin() noexcept { return array_; }
+  iterator end() noexcept { return array_ + size_; }
 
   ///                 <----------Vector Capacity---------->
-  bool empty() { return !size_; }
-  size_type size() { return size_; }
-  size_type max_size() {
+  [[nodiscard]] bool empty() const noexcept { return !size_; }
+  [[nodiscard]] size_type size() const noexcept { return size_; }
+  [[nodiscard]] size_type max_size() const {
     return std::numeric_limits<size_type>::max() / sizeof(value_type) / 2;
   }
   void reserve(size_type size) {
@@ -93,7 +93,7 @@ class vector {
       capacity_ = size;
     }
   }
-  size_type capacity() { return capacity_; }
+  [[nodiscard]] size_type capacity() const noexcept { return capacity_; }
   void shrink_to_fit() {
     if (size_ != capacity_) {
       auto new_array = new value_type[size_];
@@ -106,7 +106,7 @@ class vector {
   }
 
   ///                 <----------Vector Modifiers---------->
-  void clear() { size_ = 0; }
+  void clear() noexcept { size_ = 0; }
   iterator insert(iterator pos, const_reference value) {
     size_type shift = pos - array_;
 
@@ -124,7 +124,7 @@ class vector {
 
     return array_ + shift;
   }
-  void erase(iterator pos) {
+  void erase(iterator pos) noexcept {
     for (auto i = pos; i != end(); ++i) *i = *(i + 1);
     if (size_) --size_;
   }
@@ -139,10 +139,10 @@ class vector {
     ++size_;
     array_[size_ - 1] = value;
   }
-  void pop_back() {
+  void pop_back() noexcept {
     if (size_) --size_;
   }
-  void swap(vector &other) {
+  void swap(vector &other) noexcept {
     std::swap(array_, other.array_);
     std::swap(capacity_, other.capacity_);
     std::swap(size_, other.size_);
