@@ -29,6 +29,7 @@ add_executable(list_test
 target_link_libraries(list_test gtest gtest_main)
 
 add_executable(vector_test
+        vector/vector.h
         vector/tests/construct.cpp
         vector/tests/front.cpp
         vector/tests/back.cpp

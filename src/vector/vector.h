@@ -168,7 +168,7 @@ class vector {
 
     auto new_array = create_space(shift, shift + sizeof...(args));
     for (auto &&item : {std::forward<Args>(args)...}) {
-      new_array[shift++] = item;
+      new_array[shift++] = std::move(item);
     }
 
     if (array_ != new_array) {
