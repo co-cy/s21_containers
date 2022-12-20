@@ -2,8 +2,8 @@
 
 
 int main() {
-    std::initializer_list<int> items{1,2,3};
-    std::initializer_list<int> items2{4,5,6};
+    std::initializer_list<std::pair<int,int>> items{std::make_pair(1,2), std::make_pair(3,4), std::make_pair(5,6)};
+    
     
   return 0;
 }

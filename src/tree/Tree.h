@@ -136,19 +136,17 @@ class Tree {
  public:
   Tree() {
     fake = new TreeNode();
-  
     root_is_fake();
   }
-  Tree(std::initializer_list<value_type> const &items) {
-    fake = new TreeNode();
-    root_is_fake();
+
+  Tree(std::initializer_list<value_type> const &items) : Tree() {
     for (value_type value: items) {}
   }
-  Tree(const Tree &other) {
-    fake = new TreeNode();
-    root_is_fake();
+
+  Tree(const Tree &other) : Tree() {
     copy_tree(other.root_node);
   }
+  
   Tree(Tree &&other)
       : root_node(other.root_node),
         fake(other.fake),
@@ -295,7 +293,7 @@ class Tree {
   iterator lower_bound(const key_type& key) {
     TreeNode* node = find_contains(key);
     iterator sol = iterator(node); 
-    if (node->value_ <key)
+    if (node->value_ <key && sol!=fake)
       ++sol;
     return sol;
   }
@@ -303,11 +301,10 @@ class Tree {
   iterator upper_bound(const key_type& key) {
     TreeNode* node = find_contains(key);
     iterator sol = iterator(node); 
-    while (*sol<=key)
+    while (*sol<=key && sol!=fake)
       ++sol;
     return sol;
   }
-
 
  protected:
   void default_merge(Tree & other, TreeNode * item) {

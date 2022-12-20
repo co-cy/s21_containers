@@ -2,7 +2,7 @@
 
 #include "../set.h"
 
-// using namespace s21;
+
 
 TEST(test, ConstructorsList) {
     s21::set<int> new_set;
@@ -22,8 +22,6 @@ TEST(test, ConstructorsList) {
         ++my_iter;
         ++std_iter;
     }
-    // s21::set<int>new_set4 = std::move(new_set3);
-    // s21::set<int>new_set5 = new_set4;
 }
 
 
@@ -574,6 +572,7 @@ TEST(test, Merge4) {
         ++my_iter;
         ++std_iter;
     }
+    
     my_iter = my_set2.begin();
     std_iter = std_set2.begin();
     while(std_iter!=std_set2.end()) {

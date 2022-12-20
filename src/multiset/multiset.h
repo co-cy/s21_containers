@@ -49,7 +49,7 @@ class multiset : public Tree<Key>{
       } while (k == *iter);
       return count;
     }
-
+    
     std::pair<iterator,iterator> equal_range(const key_type& key) {
       auto iter_begin = Tree<Key>::find(key);
       auto iter = iter_begin;
@@ -60,9 +60,6 @@ class multiset : public Tree<Key>{
       --iter;
       return std::make_pair(iter_begin,iter);
     }
-    // iterator lower_bound(const key_type& key);
-    // iterator upper_bound(const Key& key);
-
 };
 }
 
