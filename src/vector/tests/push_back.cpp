@@ -20,7 +20,6 @@ TYPED_TEST(VectorPushBackTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 0);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{32};
 
@@ -29,7 +28,6 @@ TYPED_TEST(VectorPushBackTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 1);
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
-  EXPECT_NO_THROW(a.data());
 }
 
 TYPED_TEST(VectorPushBackTest, size_n) {
@@ -38,7 +36,6 @@ TYPED_TEST(VectorPushBackTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 81);
   EXPECT_DOUBLE_EQ(a.capacity(), 81);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{34};
 
@@ -47,7 +44,6 @@ TYPED_TEST(VectorPushBackTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 82);
   EXPECT_DOUBLE_EQ(a.capacity(), 162);
-  EXPECT_NO_THROW(a.data());
 }
 
 TYPED_TEST(VectorPushBackTest, size_n_2) {
@@ -56,7 +52,6 @@ TYPED_TEST(VectorPushBackTest, size_n_2) {
 
   EXPECT_DOUBLE_EQ(a.size(), 3);
   EXPECT_DOUBLE_EQ(a.capacity(), 3);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{35};
 
@@ -65,5 +60,4 @@ TYPED_TEST(VectorPushBackTest, size_n_2) {
 
   EXPECT_DOUBLE_EQ(a.size(), 4);
   EXPECT_DOUBLE_EQ(a.capacity(), 6);
-  EXPECT_NO_THROW(a.data());
 }

@@ -29,12 +29,14 @@ add_executable(list_test
 target_link_libraries(list_test gtest gtest_main)
 
 add_executable(vector_test
-        vector/tests/construct.cc
-        vector/tests/front.cc
-        vector/tests/back.cc
-        vector/tests/at.cc
-        vector/tests/operator[].cc
+        vector/tests/construct.cpp
+        vector/tests/front.cpp
+        vector/tests/back.cpp
+        vector/tests/at.cpp
+        vector/tests/operator[].cpp
         vector/tests/data.cpp
+        vector/tests/empty.cpp
+        vector/tests/size.cpp
         vector/tests/max_size.cpp
         vector/tests/capacity.cpp
         vector/tests/shrink_to_fit.cpp
@@ -43,7 +45,10 @@ add_executable(vector_test
         vector/tests/erase.cpp
         vector/tests/push_back.cpp
         vector/tests/pop_back.cpp
-        vector/tests/swap.cpp)
+        vector/tests/swap.cpp
+        vector/tests/reserve.cpp
+        vector/tests/emplace.cpp
+        vector/tests/emplace_back.cpp)
 target_link_libraries(vector_test gtest gtest_main)
 
 add_executable(array_test

@@ -20,12 +20,10 @@ TYPED_TEST(VectorClearTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 0);
-  EXPECT_NO_THROW(a.data());
 
   EXPECT_NO_THROW(a.clear());
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 0);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{13};
   typename Vector::iterator iter = nullptr;
@@ -37,13 +35,11 @@ TYPED_TEST(VectorClearTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 1);
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
-  EXPECT_NO_THROW(a.data());
   EXPECT_EQ(iter, a.data());
 
   EXPECT_NO_THROW(a.clear());
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
-  EXPECT_NO_THROW(a.data());
 }
 
 TYPED_TEST(VectorClearTest, size_n) {
@@ -52,7 +48,6 @@ TYPED_TEST(VectorClearTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 13);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{26};
   typename Vector::iterator iter = nullptr;
@@ -64,13 +59,11 @@ TYPED_TEST(VectorClearTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 14);
   EXPECT_DOUBLE_EQ(a.capacity(), 26);
-  EXPECT_NO_THROW(a.data());
   EXPECT_EQ(iter, a.data());
 
   EXPECT_NO_THROW(a.clear());
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 26);
-  EXPECT_NO_THROW(a.data());
 }
 
 TYPED_TEST(VectorClearTest, initializer_list) {
@@ -79,12 +72,10 @@ TYPED_TEST(VectorClearTest, initializer_list) {
 
   EXPECT_DOUBLE_EQ(a.size(), 13);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 
   EXPECT_NO_THROW(a.clear());
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{98};
   typename Vector::iterator iter = nullptr;
@@ -95,10 +86,8 @@ TYPED_TEST(VectorClearTest, initializer_list) {
 
   EXPECT_DOUBLE_EQ(a.size(), 1);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 
   EXPECT_NO_THROW(a.clear());
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 }

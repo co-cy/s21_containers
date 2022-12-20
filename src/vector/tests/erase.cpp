@@ -20,14 +20,12 @@ TYPED_TEST(VectorEraseTest, empty) {
 
   EXPECT_EQ(vector.capacity(), 0);
   EXPECT_EQ(vector.size(), 0);
-  EXPECT_NO_THROW(vector.data());
 
   EXPECT_NO_THROW(vector.erase(vector.begin()));
   EXPECT_NO_THROW(vector.erase(vector.end()));
 
   EXPECT_EQ(vector.capacity(), 0);
   EXPECT_EQ(vector.size(), 0);
-  EXPECT_NO_THROW(vector.data());
 }
 
 TYPED_TEST(VectorEraseTest, one_item_first) {
@@ -37,13 +35,11 @@ TYPED_TEST(VectorEraseTest, one_item_first) {
 
   EXPECT_EQ(vector.capacity(), 1);
   EXPECT_EQ(vector.size(), 1);
-  EXPECT_NO_THROW(vector.data());
 
   EXPECT_NO_THROW(vector.erase(vector.begin()));
 
   EXPECT_EQ(vector.capacity(), 1);
   EXPECT_EQ(vector.size(), 0);
-  EXPECT_NO_THROW(vector.data());
 }
 
 TYPED_TEST(VectorEraseTest, one_item_last) {
@@ -53,13 +49,11 @@ TYPED_TEST(VectorEraseTest, one_item_last) {
 
   EXPECT_EQ(vector.capacity(), 1);
   EXPECT_EQ(vector.size(), 1);
-  EXPECT_NO_THROW(vector.data());
 
   EXPECT_NO_THROW(vector.erase(vector.end() - 1));
 
   EXPECT_EQ(vector.capacity(), 1);
   EXPECT_EQ(vector.size(), 0);
-  EXPECT_NO_THROW(vector.data());
 }
 
 TYPED_TEST(VectorEraseTest, many_item) {
@@ -69,7 +63,6 @@ TYPED_TEST(VectorEraseTest, many_item) {
 
   EXPECT_EQ(vector.capacity(), 4);
   EXPECT_EQ(vector.size(), 4);
-  EXPECT_NO_THROW(vector.data());
 
   EXPECT_NO_THROW(vector.erase(vector.begin()));
   EXPECT_NO_THROW(vector.erase(vector.begin()));

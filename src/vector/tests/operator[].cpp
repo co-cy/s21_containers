@@ -27,10 +27,10 @@ TYPED_TEST(VectorOperatorGetTest, many_item) {
   TypeParam const kValue(33);
   Vector vector({TypeParam(), TypeParam(), kValue, TypeParam()});
 
-  EXPECT_NO_THROW(vector[0]);
-  EXPECT_NO_THROW(vector[1]);
+  EXPECT_NO_THROW((void)vector[0]);
+  EXPECT_NO_THROW((void)vector[1]);
   EXPECT_DOUBLE_EQ(vector[2], kValue);
-  EXPECT_NO_THROW(vector[3]);
+  EXPECT_NO_THROW((void)vector[3]);
 }
 
 TYPED_TEST(VectorOperatorGetTest, many_item_first) {
@@ -39,9 +39,9 @@ TYPED_TEST(VectorOperatorGetTest, many_item_first) {
   Vector vector({kValue, TypeParam(), TypeParam(), TypeParam()});
 
   EXPECT_DOUBLE_EQ(vector[0], kValue);
-  EXPECT_NO_THROW(vector[1]);
-  EXPECT_NO_THROW(vector[2]);
-  EXPECT_NO_THROW(vector[3]);
+  EXPECT_NO_THROW((void)vector[1]);
+  EXPECT_NO_THROW((void)vector[2]);
+  EXPECT_NO_THROW((void)vector[3]);
 }
 
 TYPED_TEST(VectorOperatorGetTest, many_item_last) {
@@ -49,8 +49,8 @@ TYPED_TEST(VectorOperatorGetTest, many_item_last) {
   TypeParam const kValue(19);
   Vector vector({TypeParam(), TypeParam(), TypeParam(), kValue});
 
-  EXPECT_NO_THROW(vector[0]);
-  EXPECT_NO_THROW(vector[1]);
-  EXPECT_NO_THROW(vector[2]);
+  EXPECT_NO_THROW((void)vector[0]);
+  EXPECT_NO_THROW((void)vector[1]);
+  EXPECT_NO_THROW((void)vector[2]);
   EXPECT_DOUBLE_EQ(vector[3], kValue);
 }

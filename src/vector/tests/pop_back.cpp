@@ -20,13 +20,11 @@ TYPED_TEST(VectorPopBackTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 0);
-  EXPECT_NO_THROW(a.data());
 
   ASSERT_NO_THROW(a.pop_back());
 
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 0);
-  EXPECT_NO_THROW(a.data());
 }
 
 TYPED_TEST(VectorPopBackTest, size_n) {
@@ -35,13 +33,11 @@ TYPED_TEST(VectorPopBackTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 11);
   EXPECT_DOUBLE_EQ(a.capacity(), 11);
-  EXPECT_NO_THROW(a.data());
 
   ASSERT_NO_THROW(a.pop_back());
 
   EXPECT_DOUBLE_EQ(a.size(), 10);
   EXPECT_DOUBLE_EQ(a.capacity(), 11);
-  EXPECT_NO_THROW(a.data());
 }
 
 TYPED_TEST(VectorPopBackTest, size_n_2) {
@@ -50,11 +46,9 @@ TYPED_TEST(VectorPopBackTest, size_n_2) {
 
   EXPECT_DOUBLE_EQ(a.size(), 1);
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
-  EXPECT_NO_THROW(a.data());
 
   ASSERT_NO_THROW(a.pop_back());
 
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
-  EXPECT_NO_THROW(a.data());
 }

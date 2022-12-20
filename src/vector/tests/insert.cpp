@@ -20,7 +20,6 @@ TYPED_TEST(VectorInsertTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 0);
   EXPECT_DOUBLE_EQ(a.capacity(), 0);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{13};
   typename Vector::iterator iter = nullptr;
@@ -32,7 +31,6 @@ TYPED_TEST(VectorInsertTest, empty) {
 
   EXPECT_DOUBLE_EQ(a.size(), 1);
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
-  EXPECT_NO_THROW(a.data());
   EXPECT_EQ(iter, a.data());
 }
 
@@ -42,7 +40,6 @@ TYPED_TEST(VectorInsertTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 13);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{26};
   typename Vector::iterator iter = nullptr;
@@ -54,7 +51,6 @@ TYPED_TEST(VectorInsertTest, size_n) {
 
   EXPECT_DOUBLE_EQ(a.size(), 14);
   EXPECT_DOUBLE_EQ(a.capacity(), 26);
-  EXPECT_NO_THROW(a.data());
   EXPECT_EQ(iter, a.data());
 }
 
@@ -64,7 +60,6 @@ TYPED_TEST(VectorInsertTest, initializer_list) {
 
   EXPECT_DOUBLE_EQ(a.size(), 13);
   EXPECT_DOUBLE_EQ(a.capacity(), 13);
-  EXPECT_NO_THROW(a.data());
 
   TypeParam value{98};
   typename Vector::iterator iter = nullptr;
@@ -75,5 +70,4 @@ TYPED_TEST(VectorInsertTest, initializer_list) {
 
   EXPECT_DOUBLE_EQ(a.size(), 14);
   EXPECT_DOUBLE_EQ(a.capacity(), 26);
-  EXPECT_NO_THROW(a.data());
 }

@@ -32,3 +32,15 @@ TYPED_TEST(VectorConstructorTest, initializer_list) {
   ASSERT_NO_THROW(Vector({TypeParam()}));
   ASSERT_NO_THROW(Vector({TypeParam(), TypeParam(), TypeParam()}));
 }
+
+TYPED_TEST(VectorConstructorTest, other_constructor) {
+  using Vector = typename TestFixture::Vector;
+
+  ASSERT_NO_THROW({
+    Vector tmp_1{{TypeParam(1)}};
+    Vector tmp_2(tmp_1);
+    Vector tmp_3(std::move(tmp_2));
+    Vector tmp_4{{TypeParam(4)}};
+    tmp_4 = std::move(tmp_3);
+  });
+}

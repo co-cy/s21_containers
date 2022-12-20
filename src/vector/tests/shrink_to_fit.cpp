@@ -25,11 +25,13 @@ TYPED_TEST(VectorShrinkTest, empty) {
 TYPED_TEST(VectorShrinkTest, size_n) {
   using Vector = typename TestFixture::Vector;
 
-  Vector a(1);
+  Vector a(1U);
+  a.reserve(100U);
   EXPECT_NO_THROW(a.shrink_to_fit());
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
 
-  Vector b(8);
+  Vector b(8U);
+  b.reserve(16U);
   EXPECT_NO_THROW(b.shrink_to_fit());
   EXPECT_DOUBLE_EQ(b.capacity(), 8);
 }
@@ -39,10 +41,12 @@ TYPED_TEST(VectorShrinkTest, initializer_list) {
   EXPECT_DOUBLE_EQ(Vector({}).capacity(), 0);
 
   Vector a{{TypeParam()}};
+  a.reserve(2U);
   EXPECT_NO_THROW(a.shrink_to_fit());
   EXPECT_DOUBLE_EQ(a.capacity(), 1);
 
   Vector b{{TypeParam(), TypeParam(), TypeParam()}};
+  b.reserve(6U);
   EXPECT_NO_THROW(b.shrink_to_fit());
   EXPECT_DOUBLE_EQ(b.capacity(), 3);
 }

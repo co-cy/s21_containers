@@ -14,13 +14,6 @@ struct VectorDataTest : public testing::Test {
 using VectorDataTypes = ::testing::Types<char, int, long double>;
 TYPED_TEST_SUITE(VectorDataTest, VectorDataTypes);
 
-TYPED_TEST(VectorDataTest, empty) {
-  using Vector = typename TestFixture::Vector;
-  Vector vector{};
-
-  EXPECT_NO_THROW(vector.data());
-}
-
 TYPED_TEST(VectorDataTest, one_item) {
   using Vector = typename TestFixture::Vector;
   TypeParam const kValue(11);
