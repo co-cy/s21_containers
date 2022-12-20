@@ -6,7 +6,26 @@
 
 #include "array/array.h"
 
-TEST(Test, int_test) {
-  s21::array<double, s21::array<int, 3U>().size()> z{{1.2, 1.3, 1.34}};
-  EXPECT_DOUBLE_EQ(z.front(), 1.2);
+template <class T>
+struct ArrayConstructorTest : public testing::Test {};
+
+using ArrayConstructorTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(ArrayConstructorTest, ArrayConstructorTypes);
+
+TYPED_TEST(ArrayConstructorTest, empty) { s21::array<TypeParam, 0U>(); }
+
+TYPED_TEST(ArrayConstructorTest, initializer_list) {
+  s21::array<TypeParam, 0U> tmp_1({});
+  s21::array<TypeParam, 1U> tmp_2({TypeParam(1)});
+  s21::array<TypeParam, 3U> tmp_3({TypeParam(1), TypeParam(2), TypeParam(3)});
+
+  ASSERT_ANY_THROW((s21::array<TypeParam, 0U>{{TypeParam(1)}}));
+}
+
+TYPED_TEST(ArrayConstructorTest, other_construct) {
+  s21::array<TypeParam, 1U> tmp_1({TypeParam(1)});
+  s21::array<TypeParam, 1U> tmp_2{tmp_1};
+  s21::array<TypeParam, 1U> tmp_3{std::move(tmp_2)};
+  s21::array<TypeParam, 1U> tmp_4{{TypeParam(3)}};
+  tmp_4 = std::move(tmp_3);
 }

@@ -42,8 +42,18 @@ target_link_libraries(vector_test gtest gtest_main)
 
 add_executable(array_test
         array/array.h
-        array/tests/construct.cpp)
-target_link_libraries(vector_test gtest gtest_main)
+        array/tests/construct.cpp
+        array/tests/operator[].cpp
+        array/tests/at.cpp
+        array/tests/back.cpp
+        array/tests/front.cpp
+        array/tests/empty.cpp
+        array/tests/size.cpp
+        array/tests/max_size.cpp
+        array/tests/data.cpp
+        array/tests/swap.cpp
+        array/tests/fill.cpp)
+target_link_libraries(array_test gtest gtest_main)
 
 
 #add_executable(CPPContainers

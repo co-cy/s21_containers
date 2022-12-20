@@ -17,7 +17,7 @@ class array {
   using reference = T &;
   using const_reference = const T &;
   using iterator = T *;
-  using const_iterator = const T *;
+  using const_iterator [[maybe_unused]] = const T *;
   using size_type = std::size_t;
 
  private:
@@ -26,16 +26,18 @@ class array {
  public:
   ///                 <----------Array Member functions---------->
   constexpr array() noexcept = default;
-  constexpr array(std::initializer_list<value_type> const &items) noexcept {
-    auto iter = data_;
-    for (auto item = items.begin(); item != items.end(); ++item) {
-      *(iter++) = *item;
+  constexpr array(std::initializer_list<value_type> const &items) {
+    if (items.size() > N) {
+      throw std::logic_error("error: too many initializers");
+    }
+
+    for (size_type i = 0U; i < N; ++i) {
+      data_[i] = items.begin()[i];
     }
   };
-  constexpr array(const array &a) noexcept {
-    auto iter = data_;
-    for (auto item = a.begin(); item != a.end(); ++item) {
-      *(iter++) = *item;
+  constexpr array(const array &a) {
+    for (size_type i = 0U; i < N; ++i) {
+      data_[i] = a[i];
     }
   }
   constexpr array(array &&a) noexcept {
@@ -44,16 +46,13 @@ class array {
       *(iter++) = std::move(item);
     }
   };
-  ~array() = default;
   constexpr array &operator=(array &&a) noexcept {
-    if (*this != a) {
-      auto iter = data_;
-      for (auto &item : a) {
-        *(iter++) = std::move(item);
-      }
+    for (size_type i = 0U; i < N; ++i) {
+      data_[i] = std::move(a[i]);
     }
     return *this;
   };
+  ~array() = default;
 
   ///                 <----------Array Element access---------->
   [[nodiscard]] constexpr reference at(size_type pos) {
@@ -63,6 +62,9 @@ class array {
     return data_[pos];
   }
   [[nodiscard]] constexpr reference operator[](size_type pos) {
+    return data_[pos];
+  }
+  [[nodiscard]] constexpr const_reference operator[](size_type pos) const {
     return data_[pos];
   }
   [[nodiscard]] constexpr const_reference front() const { return *data_; };
@@ -81,7 +83,11 @@ class array {
   [[nodiscard]] constexpr size_type max_size() const noexcept { return N; };
 
   ///                 <----------Array Member functions---------->
-  constexpr void swap(array &other) noexcept { std::swap(data_, other.data_); }
+  constexpr void swap(array &other) noexcept {
+    for (size_type i = 0U; i < N; ++i) {
+      std::swap(data_[i], other.data_[i]);
+    }
+  }
   constexpr void fill(const_reference value) {
     for (auto &item : data_) {
       item = value;
