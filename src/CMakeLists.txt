@@ -73,3 +73,7 @@ add_executable(array_test
         array/tests/swap.cpp
         array/tests/fill.cpp)
 target_link_libraries(array_test gtest gtest_main)
+
+add_executable(stack_test
+        stack/tests/construct.cpp)
+target_link_libraries(vector_test gtest gtest_main)
