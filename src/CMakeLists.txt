@@ -76,6 +76,14 @@ target_link_libraries(array_test gtest gtest_main)
 
 add_executable(queue_test
         queue/queue.h
+        queue/tests/empty.cpp
+        queue/tests/size.cpp
+        queue/tests/swap.cpp
+        queue/tests/front.cpp
+        queue/tests/back.cpp
+        queue/tests/push.cpp
+        queue/tests/pop.cpp
+        queue/tests/emplace_back.cpp
         queue/tests/construct.cpp)
 target_link_libraries(queue_test gtest gtest_main)
 

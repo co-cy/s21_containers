@@ -20,9 +20,16 @@ class queue : protected s21::list<T> {
 
  public:
   ///                 <----------Queue Member functions---------->
-  using super::super;
-  using super::operator=;
-  ~queue() { super::~super(); };
+  queue() : super(){};
+  explicit queue(size_type n) : super(n){};
+  queue(std::initializer_list<value_type> const &items) : super(items){};
+  queue(const queue &s) : super(s) {}
+  queue(queue &&s) noexcept : super(s) {}
+  queue &operator=(queue &&s) noexcept {
+    super::operator=(static_cast<super &&>(s));
+    return *this;
+  }
+  ~queue() = default;
 
   ///                 <----------Queue Element access---------->
   using super::back;
@@ -35,7 +42,9 @@ class queue : protected s21::list<T> {
   ///                 <----------Queue Modifiers---------->
   void push(const_reference value) { super::push_back(value); };
   void pop() { super::pop_front(); };
-  using super::swap;
+  void swap(queue &s) noexcept { super::swap(static_cast<super &>(s)); }
+
+  using super::emplace_back;
 };
 
 }  // namespace s21
