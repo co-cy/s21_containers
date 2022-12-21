@@ -23,6 +23,3 @@ clean:
 	@cmake $(var) -S $(source_path) -B $(build_path) -G "Unix Makefiles"
 	@make -C $(build_path) $@ -j 16
 .PHONY: %
-
-z:
-	g++ -c -Werror -Wextra -Wall -fanalyzer $(shell find . -name "*.cpp" -or -name "*.cc" -or -name "*.h" -or -name "*.h")
