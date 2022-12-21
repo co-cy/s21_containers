@@ -21,31 +21,31 @@ class vector {
   using size_type = std::size_t;
 
  private:
-  value_type *array_;
   size_type size_;
   size_type capacity_;
+  value_type *array_;
 
  public:
   ///                 <----------Vector Member functions---------->
-  vector() : size_(0U), capacity_(0U), array_(new value_type[0U]) {}
+  vector() : size_(0U), capacity_(size_), array_(new value_type[capacity_]) {}
   explicit vector(size_type n)
-      : size_(n), capacity_(n), array_(new value_type[n]) {}
+      : size_(n), capacity_(size_), array_(new value_type[capacity_]) {}
   vector(const vector &v)
-      : size_(v.size_), capacity_(v.size_), array_(new value_type[v.size_]) {
+      : size_(v.size_), capacity_(size_), array_(new value_type[capacity_]) {
     for (size_type i = 0U; i < v.size_; ++i) {
       array_[i] = v.array_[i];
     }
   }
   vector(std::initializer_list<value_type> const &items)
       : size_(items.size()),
-        capacity_(items.size()),
-        array_(new value_type[items.size()]) {
+        capacity_(size_),
+        array_(new value_type[capacity_]) {
     for (size_type i = 0U; i < items.size(); ++i) {
       array_[i] = items.begin()[i];
     }
   }
   vector(vector &&v) noexcept
-      : size_(v.size_), capacity_(v.capacity_), array_(v.array_) {
+      : size_(v.size_), capacity_(size_), array_(v.array_) {
     v.size_ = 0;
     v.capacity_ = 0;
     v.array_ = new value_type[0U];

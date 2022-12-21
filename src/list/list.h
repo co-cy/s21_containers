@@ -56,7 +56,7 @@ class list {
       node = new TNode(*item, node);
     }
   }
-  list(list &&l) noexcept : size_(l.size_), head_(l.head_) {
+  list(list &&l) noexcept : head_(l.head_), size_(l.size_) {
     l.size_ = 0;
     l.head_ = new TNode();
   }
