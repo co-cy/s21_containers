@@ -20,21 +20,31 @@ class stack : protected s21::list<T> {
 
  public:
   ///                 <----------Stack Member type---------->
-  using super::super;
-  using super::operator=;
-  ~stack() { ~super(); };
+
+  stack() : super(){};
+  explicit stack(size_type n) : super(n){};
+  stack(std::initializer_list<value_type> const &items) : super(items){};
+  stack(const stack &s) : super(s) {}
+  stack(stack &&s) noexcept : super(s) {}
+  stack &operator=(stack &&s) noexcept {
+    super::operator=(static_cast<super &&>(s));
+    return *this;
+  }
+  ~stack() = default;
 
   ///                 <----------Stack Element access---------->
-  const_reference top() { super::back(); };
+  [[nodiscard]] const_reference top() const noexcept { return super::front(); };
 
   ///                 <----------Stack Capacity---------->
   using super::empty;
   using super::size;
 
   ///                 <----------Stack Modifiers---------->
-  void push(const_reference value) { super::push_back(value); };
-  void pop() { super::pop_back(); };
-  using super::swap;
+  void push(const_reference value) { super::push_front(value); };
+  void pop() noexcept { super::pop_front(); };
+  void swap(stack &s) noexcept { super::swap(static_cast<super &>(s)); }
+
+  using super::emplace_front;
 };
 
 }  // namespace s21

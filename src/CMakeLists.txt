@@ -75,5 +75,13 @@ add_executable(array_test
 target_link_libraries(array_test gtest gtest_main)
 
 add_executable(stack_test
+        stack/stack.h
+        stack/tests/top.cpp
+        stack/tests/empty.cpp
+        stack/tests/size.cpp
+        stack/tests/swap.cpp
+        stack/tests/push.cpp
+        stack/tests/pop.cpp
+        stack/tests/emplace_front.cpp
         stack/tests/construct.cpp)
-target_link_libraries(vector_test gtest gtest_main)
+target_link_libraries(stack_test gtest gtest_main)

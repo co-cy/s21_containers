@@ -2,8 +2,7 @@
 // Created by co_cy on 22.11.22.
 //
 
-#include <gtest/gtest.h>
-
+#include "gtest/gtest.h"
 #include "stack/stack.h"
 
 template <typename T>
@@ -21,9 +20,9 @@ TYPED_TEST(StackConstructorTest, empty) {
 
 TYPED_TEST(StackConstructorTest, size_n) {
   using Stack = typename TestFixture::Stack;
-  ASSERT_NO_THROW(Stack(0));
-  ASSERT_NO_THROW(Stack(1));
-  ASSERT_NO_THROW(Stack(8));
+  ASSERT_NO_THROW(Stack(0U));
+  ASSERT_NO_THROW(Stack(1U));
+  ASSERT_NO_THROW(Stack(8U));
 }
 
 TYPED_TEST(StackConstructorTest, initializer_list) {
@@ -31,4 +30,16 @@ TYPED_TEST(StackConstructorTest, initializer_list) {
   ASSERT_NO_THROW(Stack({}));
   ASSERT_NO_THROW(Stack({TypeParam()}));
   ASSERT_NO_THROW(Stack({TypeParam(), TypeParam(), TypeParam()}));
+}
+
+TYPED_TEST(StackConstructorTest, other_constructor) {
+  using Stack = typename TestFixture::Stack;
+
+  ASSERT_NO_THROW({
+    Stack tmp_1{{TypeParam(1)}};
+    Stack tmp_2(tmp_1);
+    Stack tmp_3(std::move(tmp_2));
+    Stack tmp_4{{TypeParam(4)}};
+    tmp_4 = std::move(tmp_3);
+  });
 }
