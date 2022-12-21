@@ -107,7 +107,8 @@ struct NodeIteratorConst {
   TNode* head;
 
   NodeIteratorConst() : head(nullptr){};
-  explicit NodeIteratorConst(NodeIterator<T>& it) : head(it.head) {}
+  NodeIteratorConst(NodeIterator<T>& it) : head(it.head) {}
+  NodeIteratorConst(NodeIterator<T>&& it) : head(it.head) {}
   explicit NodeIteratorConst(const TNode* head_node) : head(head_node) {}
 
   NodeIteratorConst& operator++() noexcept {

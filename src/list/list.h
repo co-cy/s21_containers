@@ -147,47 +147,43 @@ class list {
     }
   }
   void merge(list &other) {
-    if (*this != other) {
-      if (size_ == 0U) {
-        auto this_front = begin();
-        auto this_end = end();
+    if (this != &other) {
+      auto this_it = begin();
+      auto other_it = other.begin();
+      auto this_end = end();
+      auto other_end = other.end();
 
-        for (auto other_front = other.begin(); other_front != other.end();) {
-          if (this_front == this_end) {
-            push_back(*other_front);
-          } else if (*this_front < *other_front) {
-            ++this_front;
-          } else {
-            (void)insert(this_front, *other_front);
-            ++other_front;
-          }
+      while (this_it != this_end && other_it != other_end) {
+        if (*this_it <= *other_it) {
+          ++this_it;
+        } else {
+          TNode *node = other_it.head;
+          ++other_it;
+
+          ++size_;
+          --other.size_;
+          node->ReAttach(this_it.head->head);
         }
       }
-      size_ += other.size();
-      if (other.size_ > 0U) {
-        other.clear();
-      }
+
+      splice(end(), other);
     }
   }
   void splice(const_iterator pos, list &other) noexcept {
-    if (*this != other) {
-      auto cur_node = pos.head->tail;
+    if (this != &other && other.size_ > 0U) {
+      auto cur_node = const_cast<TNode *>(pos.head)->head;
 
-      auto it = other.begin();
-      while (it != other.end()) {
-        auto node = it.head;
-        ++it;
-        node->ReAttach(cur_node);
+      other.head_->head->tail = cur_node->tail;
+      other.head_->tail->head = cur_node;
 
-        cur_node = node;
-      }
+      cur_node->tail->head = other.head_->head;
+      cur_node->tail = other.head_->tail;
 
-      if (other.size_ > 0) {
-        other.size_ = 0;
+      size_ += other.size_;
 
-        other.head_->head = other.head_;
-        other.head_->tail = other.head_;
-      }
+      other.size_ = 0;
+      other.head_->head = other.head_;
+      other.head_->tail = other.head_;
     }
   }
   void reverse() noexcept {
@@ -209,11 +205,12 @@ class list {
       }
     }
   }
+
   void sort();
 
   template <class... Args>
   iterator emplace(const_iterator pos, Args &&...args) {
-    auto head = head_;
+    auto head = const_cast<TNode *>(pos.head);
 
     for (auto item : {std::forward<Args>(args)...}) {
       head = new TNode(item, head);
