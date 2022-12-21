@@ -10,22 +10,29 @@ include("GoogleTest")
 
 
 add_executable(list_test
-        list/tests/construct.cc
-        list/tests/empty.cc
-        list/tests/max_size.cc
-        list/tests/size.cc
-        list/tests/front.cc
-        list/tests/back.cc
-        list/tests/clear.cc
-        list/tests/swap.cc
-        list/tests/insert.cc
-        list/tests/erase.cc
-        list/tests/push_back.cc
-        list/tests/pop_back.cc
-        list/tests/push_front.cc
-        list/tests/pop_front.cc
-        list/tests/reverse.cc
-        list/tests/unique.cc)
+        node/node.h
+        list/list.h
+        list/tests/construct.cpp
+        list/tests/empty.cpp
+        list/tests/max_size.cpp
+        list/tests/size.cpp
+        list/tests/front.cpp
+        list/tests/back.cpp
+        list/tests/clear.cpp
+        list/tests/swap.cpp
+        list/tests/insert.cpp
+        list/tests/erase.cpp
+        list/tests/push_back.cpp
+        list/tests/pop_back.cpp
+        list/tests/push_front.cpp
+        list/tests/pop_front.cpp
+        list/tests/reverse.cpp
+        list/tests/unique.cpp
+        list/tests/merge.cpp
+        list/tests/emplace.cpp
+        list/tests/emplace_back.cpp
+        list/tests/emplace_front.cpp
+        list/tests/splice.cpp list/tests/sort.cpp)
 target_link_libraries(list_test gtest gtest_main)
 
 add_executable(vector_test

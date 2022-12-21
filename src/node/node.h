@@ -13,52 +13,138 @@ namespace s21 {
 template <class T>
 struct Node {
   using value_type = T;
-  using reference = value_type&;
   using const_reference = const value_type&;
   using TNode = Node<value_type>;
 
-  TNode* head;
-  TNode* tail;
-  value_type data;
+  TNode* head;  // Голова это Родительский блок (элемент слева)
+  TNode* tail;  // Хвост это дочерний блок (элемент справа)
+  value_type value;
 
-  explicit Node(TNode* head = nullptr, TNode* tail = nullptr)
-      : head((head) ? head : this), tail((tail) ? tail : this), data() {}
-  explicit Node(const_reference value, TNode* head = nullptr,
-                TNode* tail = nullptr)
-      : data(value), head((head) ? head : this), tail((tail) ? tail : this){};
+  explicit Node(TNode* node = nullptr)
+      : head(node ? node : this), tail(node ? node->tail : this), value() {
+    if (node) {
+      node->tail->head = this;
+      node->tail = this;
+    }
+  }
+  explicit Node(const_reference value, TNode* node = nullptr)
+      : head(node ? node : this), tail(node ? node->tail : this), value(value) {
+    if (node) {
+      node->tail->head = this;
+      node->tail = this;
+    }
+  }
+  explicit Node(value_type&& value, TNode* node = nullptr)
+      : head(node ? node : this), tail(node ? node->tail : this), value(value) {
+    if (node) {
+      node->tail->head = this;
+      node->tail = this;
+    }
+  }
+
+  void ReAttach(TNode* node) {
+    head->tail = tail;
+    tail->head = head;
+
+    node->tail->head = this;
+    tail = node->tail;
+    node->tail = this;
+    head = node;
+  }
+
+  void DeAttach() {
+    tail->head = head;
+    head->tail = tail;
+  }
 };
 
 template <class T>
-class NodeIterator {
- public:
-  using value_type = T;
+struct NodeIterator {
+  using reference = T&;
   using TNode = Node<T>;
 
- private:
-  // TODO(think) Может быть не очень удачным решением сделать её публичным
-  TNode* head_node_;
+  TNode* head;
 
- public:
-  // Head -> end node (когда делается вставка, обнавляется последний элемент)
-  // Tail -> first element
-  NodeIterator() = default;
-  explicit NodeIterator(TNode* head_node) noexcept : head_node_(head_node) {}
-  TNode* GetNode() { return head_node_; };
-  NodeIterator<value_type>& operator++() noexcept {
-    head_node_ = head_node_->tail;
+  NodeIterator() : head(nullptr){};
+  explicit NodeIterator(TNode* head_node) : head(head_node) {}
+
+  NodeIterator& operator++() noexcept {
+    head = head->tail;
     return *this;
   }
-  NodeIterator<value_type>& operator--() noexcept {
-    head_node_ = head_node_->head;
+  NodeIterator operator+(int k) noexcept {
+    auto new_head = head;
+    for (; k > 0; --k) {
+      new_head = new_head->tail;
+    }
+    return NodeIterator(new_head);
+  }
+  NodeIterator& operator--() noexcept {
+    head = head->head;
     return *this;
   }
-  bool operator==(const NodeIterator<value_type>& other) const noexcept {
-    return head_node_ == other.head_node_;
+  NodeIterator operator-(int k) noexcept {
+    auto new_head = head;
+    for (; k > 0; --k) {
+      new_head = new_head->head;
+    }
+    return NodeIterator(new_head);
   }
-  bool operator!=(const NodeIterator<value_type>& other) const noexcept {
-    return head_node_ != other.head_node_;
+  void swap(NodeIterator& other) {
+    other.head->ReAttach(head->head);
+
+    std::swap(head, other.head);
   }
-  value_type operator*() const noexcept { return head_node_->data; }
+  bool operator==(const NodeIterator& other) const noexcept {
+    return head == other.head;
+  }
+  bool operator!=(const NodeIterator& other) const noexcept {
+    return head != other.head;
+  }
+  reference operator*() noexcept { return head->value; }
+};
+
+template <class T>
+struct NodeIteratorConst {
+  using const_reference = const T&;
+  using TNode = const Node<T>;
+
+  TNode* head;
+
+  NodeIteratorConst() : head(nullptr){};
+  NodeIteratorConst(NodeIterator<T>& it) : head(it.head) {}
+  NodeIteratorConst(NodeIterator<T>&& it) : head(it.head) {}
+  explicit NodeIteratorConst(const TNode* head_node) : head(head_node) {}
+
+  NodeIteratorConst& operator++() noexcept {
+    head = head->tail;
+    return *this;
+  }
+  NodeIteratorConst operator+(int k) noexcept {
+    auto new_head = head;
+    for (; k > 0; --k) {
+      new_head = new_head->tail;
+    }
+    return NodeIteratorConst(new_head);
+  }
+  NodeIteratorConst& operator--() noexcept {
+    head = head->head;
+    return *this;
+  }
+  NodeIteratorConst operator-(int k) noexcept {
+    auto new_head = head;
+    for (; k > 0; --k) {
+      new_head = new_head->head;
+    }
+    return NodeIteratorConst(new_head);
+  }
+  bool operator==(const NodeIteratorConst& other) const noexcept {
+    return head == other.head;
+  }
+  bool operator!=(const NodeIteratorConst& other) const noexcept {
+    return head != other.head;
+  }
+  const_reference operator*() const noexcept { return head->value; }
 };
 
 }  // namespace s21

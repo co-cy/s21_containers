@@ -3,10 +3,12 @@
 
 #include <cstdio>
 #include <initializer_list>
-#include "../node/node.h"
 #include <limits>
 
+#include "../node/node.h"
+
 namespace s21 {
+#include <iostream>
 
 template <class T>
 class list {
@@ -17,221 +19,212 @@ class list {
   using const_reference = const value_type &;
   using size_type = std::size_t;
   using iterator = NodeIterator<T>;
-  using const_iterator = NodeIterator<const T>;
+  using const_iterator = NodeIteratorConst<T>;
   using TNode = Node<value_type>;  // Template Node
 
  private:
-  TNode *head_node_;
+  TNode *head_;
   size_type size_;
-  void ClearNodes() {
-    if (head_node_) {
-      head_node_->head->tail = nullptr;
-      while (head_node_) {
-        TNode *next_node = head_node_->tail;
-        delete head_node_;
-        head_node_ = next_node;
-      }
+
+  void ClearNodes() noexcept {
+    for (;size_ > 0U; --size_) {
+      TNode *next_node = head_->tail;
+      delete head_;
+      head_ = next_node;
     }
+    delete head_;
   }
 
  public:
   ///                 <----------List Functions---------->
-  list() : head_node_(new TNode()), size_(0){};
-  explicit list(size_type n) : head_node_(new TNode()), size_(n) {
-    if (n <= 0) return;
-
-    do {
-      // head_node_->head -> last_elem
-      // head_node_ -> end
-      //
-      auto *new_node = new TNode(head_node_->head, head_node_);
-      head_node_->head->tail = new_node;
-      head_node_->head = new_node;
-    } while (--n);
+  list() : head_(new TNode()), size_(0U){};
+  explicit list(size_type n) : head_(new TNode()), size_(n) {
+    for (; n > 0U; --n) {
+      new TNode(head_);
+    }
   };
   list(std::initializer_list<value_type> const &items)
-      : head_node_(new TNode()), size_(items.size()) {
+      : head_(new TNode()), size_(items.size()) {
+    TNode *node = head_;
     for (auto item : items) {
-      auto new_node = new TNode(item, head_node_->head, head_node_);
-      head_node_->head->tail = new_node;
-      head_node_->head = new_node;
+      node = new TNode(item, node);
     }
   };
-  list(const list &l) : head_node_(new TNode()), size_(l.size_) {
-    for (iterator item = l.begin(); item != l.end(); ++item) {
-      auto new_node = new TNode(*item, head_node_->head, head_node_);
-      head_node_->tail->tail = new_node;
-      head_node_->head = new_node;
+  list(const list &l) : head_(new TNode()), size_(l.size_) {
+    TNode *node = head_;
+    for (auto item = l.begin(); item != l.end(); ++item) {
+      node = new TNode(*item, node);
     }
   }
-  list(list &&l) noexcept : size_(l.size_), head_node_(l.head_node_) {
+  list(list &&l) noexcept : size_(l.size_), head_(l.head_) {
     l.size_ = 0;
-    l.head_node_ = nullptr;
+    l.head_ = new TNode();
   }
-  ~list() { ClearNodes(); }
   list &operator=(list &&l) noexcept {
     ClearNodes();
 
     size_ = l.size_;
-    head_node_ = l.head_node_;
+    head_ = l.head_;
 
     l.size_ = 0;
-    l.head_node_ = nullptr;
+    l.head_ = new TNode();
 
     return *this;
   }
+  ~list() { ClearNodes(); }
 
   ///                 <----------List Element access---------->
   [[nodiscard]] const_reference front() const noexcept {
-    return head_node_->tail->data;
+    return head_->tail->value;
   }
   [[nodiscard]] const_reference back() const noexcept {
-    return head_node_->head->data;
+    return head_->head->value;
   }
 
   ///                 <----------List Iterators---------->
-  iterator begin() noexcept { return iterator(head_node_->tail); }
-  iterator end() noexcept { return iterator(head_node_); }
+  iterator begin() noexcept { return iterator(head_->tail); }
+  const_iterator begin() const noexcept { return const_iterator(head_->tail); }
+  iterator end() noexcept { return iterator(head_); }
+  const_iterator end() const noexcept { return const_iterator(head_); }
 
   ///                 <----------List Capacity---------->
-  [[nodiscard]] bool empty() const noexcept { return !size_; };
+  [[nodiscard]] bool empty() const noexcept { return size_ == 0U; };
   [[nodiscard]] size_type size() const noexcept { return size_; };
   [[nodiscard]] size_type max_size() const noexcept {
-    return std::numeric_limits<size_type>::max() / sizeof(TNode) / 2;
+    return std::numeric_limits<size_type>::max() / sizeof(TNode) / 2U;
   };
 
   ///                 <----------List Modifiers---------->
   void clear() {
     ClearNodes();
-
-    head_node_ = new TNode();
-    size_ = 0;
+    head_ = new TNode();
   };
   iterator insert(iterator pos, const_reference value) {
-    auto new_node = new TNode(value, pos.GetNode()->head, pos.GetNode());
-    pos.GetNode()->head->tail = new_node;
-    pos.GetNode()->head = new_node;
-
+    new TNode(value, pos.head->head);
     ++size_;
-
     return --pos;
   }
-  void erase(iterator pos) {
-    if (size_) {
-      pos.GetNode()->tail->head = pos.GetNode()->head;
-      pos.GetNode()->head->tail = pos.GetNode()->tail;
-      delete pos.GetNode();
-
+  void erase(iterator pos) noexcept {
+    if (size_ > 0U) {
+      pos.head->DeAttach();
+      delete pos.head;
       --size_;
     }
   }
-  void push_back(const_reference value) noexcept {
-    auto new_node = new TNode(value, head_node_->head, head_node_);
-    head_node_->head->tail = new_node;
-    head_node_->head = new_node;
-
+  void push_back(const_reference value) {
+    new TNode(value, head_->head);
     ++size_;
   }
-  void pop_back() noexcept {
-    if (size()) {
-      TNode *end = head_node_->head;
-
-      head_node_->head = end->head;
-      end->head->tail = head_node_;
-
-      delete end;  // указываем
-      --size_;
-    }
-  }
+  void pop_back() noexcept { erase(--end()); }
   void swap(list &other) noexcept {
-    std::swap(head_node_, other.head_node_);
+    std::swap(head_, other.head_);
     std::swap(size_, other.size_);
   }
-  void push_front(const_reference value) noexcept {
-    auto new_node = new TNode(value, head_node_, head_node_->tail);
-    head_node_->tail->head = new_node;
-    head_node_->tail = new_node;
-
+  void push_front(const_reference value) {
+    new TNode(value, head_);
     ++size_;
   }
-  void pop_front() noexcept {
-    if (size()) {
-      TNode *front = head_node_->tail;
-
-      head_node_->tail = front->tail;
-      front->tail->head = head_node_;
-
-      delete front;  // указываем
-      --size_;
-    }
-  }
+  void pop_front() noexcept { erase(begin()); }
   void merge(list &other) {
-    if (*this != other) {
-      if (!size()) {
-        auto this_front = begin();
-        auto this_end = end();
+    if (this != &other) {
+      auto this_it = begin();
+      auto other_it = other.begin();
+      auto this_end = end();
+      auto other_end = other.end();
 
-        for (auto other_front = other.begin(); other_front != other.end();) {
-          if (this_front == this_end) {
-            push_back(*other_front);
-          } else if (*this_front < *other_front) {
-            ++this_front;
-          } else {
-            insert(this_front, *other_front);
-            ++other_front;
-          }
+      while (this_it != this_end && other_it != other_end) {
+        if (*this_it <= *other_it) {
+          ++this_it;
+        } else {
+          TNode *node = other_it.head;
+          ++other_it;
+
+          ++size_;
+          --other.size_;
+          node->ReAttach(this_it.head->head);
         }
       }
-      size_ += other.size();
-      if (other.size()) other.clear();
+
+      splice(end(), other);
     }
   }
-  void splice(const_iterator pos, list &other) {
-    TNode *cur_node = pos.GetNode();
-    if (*this != other) {
-      for (auto other_front = other.begin(); other_front != other.end();
-           ++other_front) {
-        other_front.GetNode()->head = cur_node->head;
-        cur_node->head->tail = other_front.GetNode();
+  void splice(const_iterator pos, list &other) noexcept {
+    if (this != &other && other.size_ > 0U) {
+      auto cur_node = const_cast<TNode *>(pos.head)->head;
 
-        other_front.GetNode()->tail = cur_node;
-        cur_node->head = other_front.GetNode();
+      other.head_->head->tail = cur_node->tail;
+      other.head_->tail->head = cur_node;
 
-        ++size_;
-      }
-      if (other.size()) {
-        other.size_ = 0;
-        other.head_node_->head = other.head_node_;
-        other.head_node_->tail = other.head_node_;
-      }
+      cur_node->tail->head = other.head_->head;
+      cur_node->tail = other.head_->tail;
+
+      size_ += other.size_;
+
+      other.size_ = 0;
+      other.head_->head = other.head_;
+      other.head_->tail = other.head_;
     }
   }
-  void reverse() {
-    auto tmp_nodes = head_node_;
+  void reverse() noexcept {
+    auto tmp_nodes = head_;
     do {
       auto next_node = tmp_nodes->tail;
       std::swap(tmp_nodes->tail, tmp_nodes->head);
       tmp_nodes = next_node;
-    } while (tmp_nodes != head_node_);
+    } while (tmp_nodes != head_);
   }
-  void unique() {
-    for (auto last_iter = begin(), iter_node = ++begin(); iter_node != end();) {
-      if (*(last_iter) == *iter_node) {
-        TNode *remove_node = iter_node.GetNode();
-        ++iter_node;
-
-        remove_node->head->tail = remove_node->tail;
-        remove_node->tail->head = remove_node->head;
-        delete remove_node;
-
-        --size_;
+  void unique() noexcept {
+    for (iterator last_it = begin(), cur_it = ++begin(); cur_it != end();) {
+      if (*last_it == *cur_it) {
+        erase(cur_it);
+        cur_it = last_it + 1;
       } else {
-        ++last_iter;
-        ++iter_node;
+        ++last_it;
+        ++cur_it;
       }
     }
   }
-  void sort();
+  void sort() noexcept { InsertionSort(begin(), end()); }
+
+  template <class... Args>
+  iterator emplace(const_iterator pos, Args &&...args) {
+    auto head = const_cast<TNode *>(pos.head)->head;
+
+    for (auto item : {std::forward<Args>(args)...}) {
+      head = new TNode(item, head);
+    }
+
+    size_ += sizeof...(args);
+    return iterator(head);
+  }
+
+  template <class... Args>
+  void emplace_back(Args &&...args) {
+    emplace(end(), args...);
+  }
+
+  template <class... Args>
+  void emplace_front(Args &&...args) {
+    emplace(begin(), args...);
+  }
+
+ private:
+  void InsertionSort(iterator start, iterator end) {
+    for (iterator i = start + 1; i != end; ++i) {
+      value_type &temp = i.head->value;
+      iterator j = i - 1;
+      iterator k = i;
+      while (j.head->value > temp) {
+        j.swap(k);
+        if (j == start) {
+          break;
+        } else {
+          --k;
+          --j;
+        }
+      }
+    }
+  }
 };
 
 }  // namespace s21
