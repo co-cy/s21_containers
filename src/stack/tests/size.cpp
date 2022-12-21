@@ -6,33 +6,33 @@
 #include "stack/stack.h"
 
 template <typename T>
-struct StackEmptyTest : public testing::Test {
+struct StackSizeTest : public testing::Test {
   using Stack = s21::stack<T>;
 };
 
-using StackEmptyTypes = ::testing::Types<char, int, long double>;
-TYPED_TEST_SUITE(StackEmptyTest, StackEmptyTypes);
+using StackSizeTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(StackSizeTest, StackSizeTypes);
 
-TYPED_TEST(StackEmptyTest, empty) {
+TYPED_TEST(StackSizeTest, empty) {
   using Stack = typename TestFixture::Stack;
   EXPECT_EQ(Stack().size(), 0);
 }
 
-TYPED_TEST(StackEmptyTest, size_n) {
+TYPED_TEST(StackSizeTest, size_n) {
   using Stack = typename TestFixture::Stack;
   EXPECT_EQ(Stack(0U).size(), 0);
   EXPECT_EQ(Stack(1U).size(), 1);
   EXPECT_EQ(Stack(8U).size(), 8);
 }
 
-TYPED_TEST(StackEmptyTest, initializer_list) {
+TYPED_TEST(StackSizeTest, initializer_list) {
   using Stack = typename TestFixture::Stack;
   EXPECT_EQ(Stack({}).size(), 0);
   EXPECT_EQ(Stack({TypeParam()}).size(), 1);
   EXPECT_EQ(Stack({TypeParam(), TypeParam(), TypeParam()}).size(), 3);
 }
 
-TYPED_TEST(StackEmptyTest, other_constructor) {
+TYPED_TEST(StackSizeTest, other_constructor) {
   using Stack = typename TestFixture::Stack;
 
   Stack tmp_1{{TypeParam(1)}};

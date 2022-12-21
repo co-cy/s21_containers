@@ -8,6 +8,7 @@ include_directories(.)
 
 include("GoogleTest")
 
+enable_testing()
 
 add_executable(list_test
         node/node.h
@@ -35,6 +36,7 @@ add_executable(list_test
         list/tests/splice.cpp list/tests/sort.cpp)
 target_link_libraries(list_test gtest gtest_main)
 
+
 add_executable(vector_test
         vector/vector.h
         vector/tests/construct.cpp
@@ -59,6 +61,7 @@ add_executable(vector_test
         vector/tests/emplace_back.cpp)
 target_link_libraries(vector_test gtest gtest_main)
 
+
 add_executable(array_test
         array/array.h
         array/tests/construct.cpp
@@ -73,6 +76,7 @@ add_executable(array_test
         array/tests/swap.cpp
         array/tests/fill.cpp)
 target_link_libraries(array_test gtest gtest_main)
+
 
 add_executable(queue_test
         queue/queue.h
@@ -99,3 +103,9 @@ add_executable(stack_test
         stack/tests/emplace_front.cpp
         stack/tests/construct.cpp)
 target_link_libraries(stack_test gtest gtest_main)
+
+gtest_discover_tests(list_test)
+gtest_discover_tests(vector_test)
+gtest_discover_tests(array_test)
+gtest_discover_tests(queue_test)
+gtest_discover_tests(stack_test)

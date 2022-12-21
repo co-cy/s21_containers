@@ -3,6 +3,7 @@
 //
 
 #include <gtest/gtest.h>
+
 #include "list/list.h"
 
 template <class T>

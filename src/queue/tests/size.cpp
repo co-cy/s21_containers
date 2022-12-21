@@ -6,33 +6,33 @@
 #include "queue/queue.h"
 
 template <typename T>
-struct QueueEmptyTest : public testing::Test {
+struct QueueSizeTest : public testing::Test {
   using Queue = s21::queue<T>;
 };
 
-using QueueEmptyTypes = ::testing::Types<char, int, long double>;
-TYPED_TEST_SUITE(QueueEmptyTest, QueueEmptyTypes);
+using QueueSizeTypes = ::testing::Types<char, int, long double>;
+TYPED_TEST_SUITE(QueueSizeTest, QueueSizeTypes);
 
-TYPED_TEST(QueueEmptyTest, empty) {
+TYPED_TEST(QueueSizeTest, empty) {
   using Queue = typename TestFixture::Queue;
   EXPECT_EQ(Queue().size(), 0);
 }
 
-TYPED_TEST(QueueEmptyTest, size_n) {
+TYPED_TEST(QueueSizeTest, size_n) {
   using Queue = typename TestFixture::Queue;
   EXPECT_EQ(Queue(0U).size(), 0);
   EXPECT_EQ(Queue(1U).size(), 1);
   EXPECT_EQ(Queue(8U).size(), 8);
 }
 
-TYPED_TEST(QueueEmptyTest, initializer_list) {
+TYPED_TEST(QueueSizeTest, initializer_list) {
   using Queue = typename TestFixture::Queue;
   EXPECT_EQ(Queue({}).size(), 0);
   EXPECT_EQ(Queue({TypeParam()}).size(), 1);
   EXPECT_EQ(Queue({TypeParam(), TypeParam(), TypeParam()}).size(), 3);
 }
 
-TYPED_TEST(QueueEmptyTest, other_constructor) {
+TYPED_TEST(QueueSizeTest, other_constructor) {
   using Queue = typename TestFixture::Queue;
 
   Queue tmp_1{{TypeParam(1)}};

@@ -27,7 +27,7 @@ class list {
   size_type size_;
 
   void ClearNodes() noexcept {
-    for (;size_ > 0U; --size_) {
+    for (; size_ > 0U; --size_) {
       TNode *next_node = head_->tail;
       delete head_;
       head_ = next_node;
