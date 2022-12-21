@@ -29,7 +29,10 @@ add_executable(list_test
         list/tests/reverse.cpp
         list/tests/unique.cpp
         list/tests/merge.cpp
-        list/tests/splice.cpp)
+        list/tests/emplace.cpp
+        list/tests/emplace_back.cpp
+        list/tests/emplace_front.cpp
+        list/tests/splice.cpp list/tests/sort.cpp)
 target_link_libraries(list_test gtest gtest_main)
 
 add_executable(vector_test

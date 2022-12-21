@@ -90,6 +90,11 @@ struct NodeIterator {
     }
     return NodeIterator(new_head);
   }
+  void swap(NodeIterator& other) {
+    other.head->ReAttach(head->head);
+
+    std::swap(head, other.head);
+  }
   bool operator==(const NodeIterator& other) const noexcept {
     return head == other.head;
   }

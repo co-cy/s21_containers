@@ -8,13 +8,14 @@
 #include "../node/node.h"
 
 namespace s21 {
+#include <iostream>
 
 template <class T>
 class list {
  public:
   ///                 <----------List Member type---------->
   using value_type = T;
-  using reference = value_type &;
+  using reference [[maybe_unused]] = value_type &;
   using const_reference = const value_type &;
   using size_type = std::size_t;
   using iterator = NodeIterator<T>;
@@ -26,14 +27,12 @@ class list {
   size_type size_;
 
   void ClearNodes() noexcept {
-    if (head_) {
-      head_->head->tail = nullptr;
-      while (head_) {
-        TNode *next_node = head_->tail;
-        delete head_;
-        head_ = next_node;
-      }
+    for (;size_ > 0U; --size_) {
+      TNode *next_node = head_->tail;
+      delete head_;
+      head_ = next_node;
     }
+    delete head_;
   }
 
  public:
@@ -98,8 +97,6 @@ class list {
   ///                 <----------List Modifiers---------->
   void clear() {
     ClearNodes();
-
-    size_ = 0U;
     head_ = new TNode();
   };
   iterator insert(iterator pos, const_reference value) {
@@ -111,7 +108,6 @@ class list {
     if (size_ > 0U) {
       pos.head->DeAttach();
       delete pos.head;
-
       --size_;
     }
   }
@@ -119,16 +115,7 @@ class list {
     new TNode(value, head_->head);
     ++size_;
   }
-  void pop_back() noexcept {
-    if (size_ > 0U) {
-      TNode *end = head_->head;
-
-      end->DeAttach();
-      delete end;
-
-      --size_;
-    }
-  }
+  void pop_back() noexcept { erase(--end()); }
   void swap(list &other) noexcept {
     std::swap(head_, other.head_);
     std::swap(size_, other.size_);
@@ -137,15 +124,7 @@ class list {
     new TNode(value, head_);
     ++size_;
   }
-  void pop_front() noexcept {
-    if (size_ > 0U) {
-      TNode *front = head_->tail;
-      front->DeAttach();
-      delete front;
-
-      --size_;
-    }
-  }
+  void pop_front() noexcept { erase(begin()); }
   void merge(list &other) {
     if (this != &other) {
       auto this_it = begin();
@@ -205,12 +184,11 @@ class list {
       }
     }
   }
-
-  void sort();
+  void sort() noexcept { InsertionSort(begin(), end()); }
 
   template <class... Args>
   iterator emplace(const_iterator pos, Args &&...args) {
-    auto head = const_cast<TNode *>(pos.head);
+    auto head = const_cast<TNode *>(pos.head)->head;
 
     for (auto item : {std::forward<Args>(args)...}) {
       head = new TNode(item, head);
@@ -228,6 +206,24 @@ class list {
   template <class... Args>
   void emplace_front(Args &&...args) {
     emplace(begin(), args...);
+  }
+
+ private:
+  void InsertionSort(iterator start, iterator end) {
+    for (iterator i = start + 1; i != end; ++i) {
+      value_type &temp = i.head->value;
+      iterator j = i - 1;
+      iterator k = i;
+      while (j.head->value > temp) {
+        j.swap(k);
+        if (j == start) {
+          break;
+        } else {
+          --k;
+          --j;
+        }
+      }
+    }
   }
 };
 
