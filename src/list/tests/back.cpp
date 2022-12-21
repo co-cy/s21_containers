@@ -13,11 +13,6 @@ struct ListBackTest : public testing::Test {
 using ListBackTypes = ::testing::Types<char, int, long double>;
 TYPED_TEST_SUITE(ListBackTest, ListBackTypes);
 
-TYPED_TEST(ListBackTest, empty_list) {
-  using List = typename TestFixture::List;
-  EXPECT_NO_THROW((void)List().back());
-}
-
 TYPED_TEST(ListBackTest, one_item) {
   using List = typename TestFixture::List;
   TypeParam value{110};

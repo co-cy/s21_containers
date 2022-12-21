@@ -39,13 +39,13 @@ TYPED_TEST(ListEraseTest, many_item_1) {
 
 TYPED_TEST(ListEraseTest, many_item_2) {
   using List = typename TestFixture::List;
-  TypeParam k_value(7);
-  List a({TypeParam(), TypeParam(), k_value});
-  typename List::iterator iter = --a.end();
-  typename List::iterator iter_2 = iter;
+  TypeParam value(7);
+  List a({TypeParam(), TypeParam(), value});
+  auto iter = --a.end();
+  auto iter_2 = iter;
   --iter_2;
 
   EXPECT_NO_THROW(a.erase(iter_2));
-  EXPECT_EQ(*iter, k_value);
+  EXPECT_EQ(*iter, value);
   EXPECT_EQ(a.size(), 2);
 }

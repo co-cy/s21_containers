@@ -28,24 +28,24 @@ TYPED_TEST(ListSwapTest, empty) {
 
 TYPED_TEST(ListSwapTest, one_item) {
   using List = typename TestFixture::List;
-  List a(1);
-  List b(1);
+  List a(1U);
+  List b(1U);
 
   EXPECT_NO_THROW(a.swap(b));
-  EXPECT_EQ(a.size(), 1);
-  EXPECT_EQ(b.size(), 1);
+  EXPECT_EQ(a.size(), 1U);
+  EXPECT_EQ(b.size(), 1U);
   EXPECT_NE(a.begin(), a.end());
   EXPECT_NE(b.begin(), b.end());
 }
 
 TYPED_TEST(ListSwapTest, many_item) {
   using List = typename TestFixture::List;
-  List a(8);
-  List b(16);
+  List a(8U);
+  List b(16U);
 
   EXPECT_NO_THROW(a.swap(b));
-  EXPECT_EQ(a.size(), 16);
-  EXPECT_EQ(b.size(), 8);
+  EXPECT_EQ(a.size(), 16U);
+  EXPECT_EQ(b.size(), 8U);
   EXPECT_NE(a.begin(), a.end());
   EXPECT_NE(b.begin(), b.end());
 }

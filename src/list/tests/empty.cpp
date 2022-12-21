@@ -28,15 +28,18 @@ TYPED_TEST(ListEmptyTest, not_empty_list) {
 
 TYPED_TEST(ListEmptyTest, cleared_list) {
   using List = typename TestFixture::List;
-  List a = List(0);
+  List a = List(0U);
   a.clear();
   ASSERT_TRUE(a.empty());
+
   a = List({});
   a.clear();
   ASSERT_TRUE(a.empty());
-  a = List(4);
+
+  a = List(4U);
   a.clear();
   ASSERT_TRUE(a.empty());
+
   a = List({TypeParam(), TypeParam(), TypeParam()});
   a.clear();
   ASSERT_TRUE(a.empty());
