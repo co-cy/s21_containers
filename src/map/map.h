@@ -20,28 +20,34 @@ class map : public Tree<std::pair<Key,T>> {
   using reference = value_type&;
   using const_reference = const value_type&;
   using iterator = typename Tree<value_type>::TreeIterator;
-  //  const_iterator
+  using const_iterator = typename Tree<value_type>::TreeIteratorConst;
   using size_type = std::size_t;
 
  public:
   ///                 <----------Map Member functions---------->
 
-  map(std::initializer_list<value_type> const& items) {
+  map(std::initializer_list<value_type> const& items) :map() {
     for (value_type value: items) {
       insert(value.first, value.second);
     }
   }
 
   ///                 <----------Map Element access---------->
-  T& at(const key_type& key) {
-    return find_contains_map(key)->value_.second;
+  mapped_type& at(const key_type& key) {
+    auto sol = find_contains_map(key);
+    if (!sol) throw std::out_of_range("There is no such key!");
+    return sol->value_.second;
   }
-  T& operator[](const key_type& key) {
-    auto a = find_contains_map(key);
-    if (a) return a->value_.second;
-    value_type val = value_type(key, mapped_type());
-    Tree<value_type>::default_insert(val);
-    return val.second;
+
+  mapped_type& operator[](const key_type& key) {
+    try {
+      return at(key);
+    } catch(...){
+      value_type val = value_type(key, mapped_type());
+      Tree<value_type>::default_insert(val);
+      return at(key);
+
+    }
   }
 
   ///                 <----------Map Iterators---------->
@@ -53,7 +59,7 @@ class map : public Tree<std::pair<Key,T>> {
 
   std::pair<iterator, bool> insert(const key_type& key, const mapped_type& obj) {
     if (contains(key))
-      return std::make_pair(nullptr, false);
+      return std::make_pair(iterator(this->find_contains_map(key)), false);
     iterator iter = Tree<value_type>::default_insert(std::make_pair(key,obj));
     return std::make_pair(iter, true);
   }
@@ -72,7 +78,7 @@ class map : public Tree<std::pair<Key,T>> {
     return std::make_pair(iter, true);
   }
   void merge(map& other) {
-    merge_map(other, other.root_node);
+    merge_map(other, other.ret_root());
   }
 
   ///                 <----------Map Modifiers---------->
@@ -81,9 +87,17 @@ class map : public Tree<std::pair<Key,T>> {
     return 0;
   }
 
+  template<class... Args>
+  std::vector<std::pair<iterator,bool>> emplace(Args&&... args){
+    std::vector<std::pair<iterator,bool>> res = {(insert(args))...};
+  return res;
+  }
+
+
+ private:
   typename Tree<value_type>::TreeNode * find_contains_map(const key_type& key) {
     if (this->empty()) return nullptr; 
-    auto *current = Tree<value_type>::root_node;
+    auto *current = Tree<value_type>::ret_root();
     while(1) {
       if (current == nullptr) {
         return nullptr;

@@ -393,3 +393,33 @@ TEST(test, mapContains) {
   ASSERT_EQ(my_map.contains(33),true);
   ASSERT_EQ(my_map.contains(0),false);
 }
+
+TEST(test, mapEmplace) {
+
+  s21::map<int, std::string> my_map{
+      std::make_pair(42, "foo"), std::make_pair(3, "bar"),
+      std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
+  std::map<int, std::string> std_map{
+      std::make_pair(42, "foo"), std::make_pair(3, "bar"),
+      std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
+
+  std::map<int, std::string> std_map2{
+      std::make_pair(42, "foo"), std::make_pair(323, "basdar"),
+      std::make_pair(343, "abobaaWD"), std::make_pair(-3, "ba")};
+
+  std_map.merge(std_map2);
+  my_map.emplace(
+      std::make_pair(42, "foo"), std::make_pair(323, "basdar"),
+      std::make_pair(343, "abobaaWD"), std::make_pair(-3, "ba"));
+
+  auto my_iter = my_map.begin();
+  auto std_iter = std_map.begin();
+
+  while (std_iter != std_map.end()) {
+    ASSERT_TRUE((*my_iter).first == (*std_iter).first);
+    ASSERT_TRUE((*my_iter).second == (*std_iter).second);
+    ++my_iter;
+    ++std_iter;
+  }
+  ASSERT_TRUE(my_iter == my_map.end());
+}

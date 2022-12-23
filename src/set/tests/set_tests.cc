@@ -2,28 +2,20 @@
 
 #include "../set.h"
 
-
-
 TEST(test, ConstructorsList) {
     s21::set<int> new_set;
 
     std::initializer_list<int> items{2,1,3,4};
-    std::cout << "ok1" <<std::endl;
-
     s21::set<int>my_set2(items);
     std::set<int>std_set2(items);
-    std::cout << "ok1" <<std::endl;
     auto my_iter = my_set2.begin();
     auto std_iter = std_set2.begin();
-    std::cout << "ok1" <<std::endl;
-
     while(my_iter != my_set2.end()) {
         ASSERT_TRUE(*my_iter == *std_iter);
         ++my_iter;
         ++std_iter;
     }
 }
-
 
 TEST(test, ConstructorsList2) {
     std::initializer_list<int> items{2,1,2,2};
@@ -54,11 +46,7 @@ TEST(test, ConstructorsCopy) {
         ++my_iter;
         ++std_iter;
     }
-
-    // s21::set<int>new_set5 = new_set4;
 }
-
-
 
 TEST(test, ConstructorsMove) {
     std::initializer_list<int> items{2,1,2,2};
@@ -341,7 +329,7 @@ TEST(test, Erase5) {
         ASSERT_TRUE(*my_iter == *std_iter);
         ++my_iter;
         ++std_iter;
-    }    
+    }
 }
 
 TEST(test, Erase6) {
@@ -572,10 +560,27 @@ TEST(test, Merge4) {
         ++my_iter;
         ++std_iter;
     }
-    
+
     my_iter = my_set2.begin();
     std_iter = std_set2.begin();
     while(std_iter!=std_set2.end()) {
+        ASSERT_TRUE(*my_iter == *std_iter);
+        ++my_iter;
+        ++std_iter;
+    }
+}
+
+TEST(test, Emplace) {
+    std::initializer_list<int> items{1,2,3};
+    std::initializer_list<int> items2{2,3,543};
+    s21::set<int> my_set(items);
+    std::set<int> std_set(items);
+    std::set<int> std_set2(items2); 
+    std_set.merge(std_set2);
+    my_set.emplace(2,3,543);
+    auto my_iter = my_set.begin();
+    auto std_iter = std_set.begin();
+    while(std_iter!=std_set.end()) {
         ASSERT_TRUE(*my_iter == *std_iter);
         ++my_iter;
         ++std_iter;

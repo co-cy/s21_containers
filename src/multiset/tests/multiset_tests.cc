@@ -646,3 +646,20 @@ TEST(test, upper_bound) {
     ASSERT_TRUE(*my_iter == *std_iter);
   }
 }
+
+TEST(test, Emplace) {
+    std::initializer_list<int> items{1,2,3};
+    std::initializer_list<int> items2{2,3,543};
+    s21::multiset<int> my_multiset(items);
+    std::multiset<int> std_multiset(items);
+    std::multiset<int> std_multiset2(items2); 
+    std_multiset.merge(std_multiset2);
+    my_multiset.emplace(2,3,543);
+    auto my_iter = my_multiset.begin();
+    auto std_iter = std_multiset.begin();
+    while(std_iter!=std_multiset.end()) {
+        ASSERT_TRUE(*my_iter == *std_iter);
+        ++my_iter;
+        ++std_iter;
+    }
+}

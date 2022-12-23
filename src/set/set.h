@@ -15,17 +15,17 @@ class set : public Tree<Key>{
   using Tree<Key>::Tree;
   using key_type = Key;
   using value_type = Key;
-  using reference = value_type &;  // TODO Плохой вариант правило склейки ссылок
+  using reference = value_type &;
   using const_reference =
-      const value_type &;  // TODO Плохой вариант правило склейки ссылок
+      const value_type &; 
   using iterator = typename Tree<key_type>::TreeIterator;
-  //  const_iterator
+  using const_iterator = typename Tree<value_type>::TreeIteratorConst;
   using size_type = std::size_t;
 
  public:
   ///                 <----------Set Member functions---------->
 
-  set(std::initializer_list<value_type> const &items) {
+  set(std::initializer_list<value_type> const &items) :set() {
     for (value_type value: items) {
       insert(value);
     }
@@ -38,15 +38,18 @@ class set : public Tree<Key>{
   ///                 <----------Set Modifiers---------->
 
   std::pair<iterator, bool> insert(const value_type& value) {
-    if (!this->contains(value)) {
-      iterator iter = this->default_insert(value);
-      return std::make_pair(iter, true);
-    }
-    return std::make_pair(nullptr, false);
+    return  Tree<key_type>::auto_insert(value,false);
   }
   void merge(set &other) {
-    merge_set(other,other.root_node);
+    merge_set(other,other.ret_root());
   }
+
+  template<class... Args>
+  std::vector<std::pair<iterator,bool>> emplace(Args&&... args){
+    std::vector<std::pair<iterator,bool>> res = {(insert(args))...};
+  return res;
+  }
+
 
   ///                 <----------Set Lookup---------->
 
@@ -62,6 +65,8 @@ class set : public Tree<Key>{
       other.erase(iter);
     }
   }
+
+  
 };
 
 }  // namespace s21
