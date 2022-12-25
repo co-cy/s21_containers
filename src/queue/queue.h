@@ -20,16 +20,7 @@ class queue : protected s21::list<T> {
 
  public:
   ///                 <----------Queue Member functions---------->
-  queue() : super(){};
-  explicit queue(size_type n) : super(n){};
-  queue(std::initializer_list<value_type> const &items) : super(items){};
-  queue(const queue &s) : super(s) {}
-  queue(queue &&s) noexcept : super(s) {}
-  queue &operator=(queue &&s) noexcept {
-    super::operator=(static_cast<super &&>(s));
-    return *this;
-  }
-  ~queue() = default;
+  using super::super;
 
   ///                 <----------Queue Element access---------->
   using super::back;

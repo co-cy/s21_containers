@@ -20,17 +20,7 @@ class stack : protected s21::list<T> {
 
  public:
   ///                 <----------Stack Member type---------->
-
-  stack() : super(){};
-  explicit stack(size_type n) : super(n){};
-  stack(std::initializer_list<value_type> const &items) : super(items){};
-  stack(const stack &s) : super(s) {}
-  stack(stack &&s) noexcept : super(s) {}
-  stack &operator=(stack &&s) noexcept {
-    super::operator=(static_cast<super &&>(s));
-    return *this;
-  }
-  ~stack() = default;
+  using super::super;
 
   ///                 <----------Stack Element access---------->
   [[nodiscard]] const_reference top() const noexcept { return super::front(); };
