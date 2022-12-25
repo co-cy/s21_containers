@@ -8,7 +8,7 @@
 namespace s21 {
 
 template <class T>
-class Tree {
+class tree {
  public:
   class TreeIterator;
   class TreeIteratorConst;
@@ -16,18 +16,19 @@ class Tree {
  public:
   using key_type = T;
   using value_type = key_type;
+  using cosnt_value_type = const key_type;
   using iterator = TreeIterator;
   using const_iterator = TreeIteratorConst;
   using size_type = size_t;
 
  public:
   struct TreeNode {
-
     TreeNode *parent_;
     TreeNode *left_elem_;
     TreeNode *right_elem_;
     value_type value_;
-    bool is_fake = 0;
+    bool is_fake = false;
+
     explicit TreeNode()
         : parent_(nullptr),
           left_elem_(nullptr),
@@ -53,7 +54,7 @@ class Tree {
 
     value_type &operator*() noexcept { return curr_node->value_; }
 
-    bool operator==(const TreeIterator &other) const noexcept{
+    bool operator==(const TreeIterator &other) const noexcept {
       return curr_node == other.curr_node;
     }
 
@@ -67,7 +68,7 @@ class Tree {
     }
 
     TreeIterator operator++(int) noexcept {
-      iterator * n = this;
+      iterator *n = this;
       IteratorPlus();
       return *n;
     }
@@ -124,12 +125,12 @@ class Tree {
     TreeNode *curr_node;
 
     TreeIteratorConst() = delete;
-    TreeIteratorConst(TreeIterator& it) : curr_node(it.curr_node) {}
-    TreeIteratorConst(TreeIterator&& it) : curr_node(it.curr_node) {}
+    TreeIteratorConst(TreeIterator &it) : curr_node(it.curr_node) {}
+    TreeIteratorConst(TreeIterator &&it) : curr_node(it.curr_node) {}
     explicit TreeIteratorConst(TreeNode *elem) : curr_node(elem) {}
-    value_type &operator*() noexcept { return curr_node->value_; }
+    cosnt_value_type &operator*() noexcept { return curr_node->value_; }
 
-    bool operator==(const TreeIterator &other) const noexcept{
+    bool operator==(const TreeIterator &other) const noexcept {
       return curr_node == other.curr_node;
     }
 
@@ -143,7 +144,7 @@ class Tree {
     }
 
     TreeIteratorConst operator++(int) noexcept {
-      iterator * n = this;
+      iterator *n = this;
       IteratorPlus();
       return *n;
     }
@@ -198,16 +199,11 @@ class Tree {
   size_type tree_size;
 
  public:
-  Tree() {
-    fake = new TreeNode();
-    root_is_fake();
-  }
+  tree() : fake(new TreeNode()), tree_size(0) { root_is_fake(); }
 
-  Tree(const Tree &other) : Tree() {
-    copy_tree(other.root_node);
-  }
-  
-  Tree(Tree &&other) noexcept
+  tree(const tree &other) : tree() { copy_tree(other.root_node); }
+
+  tree(tree &&other) noexcept
       : root_node(other.root_node),
         fake(other.fake),
         tree_size(other.tree_size) {
@@ -216,48 +212,34 @@ class Tree {
     other.tree_size = 0;
   }
 
-  ~Tree() {
-    if (root_node!=fake)
-      DestroyNode(root_node);
+  ~tree() {
+    if (root_node != fake) destroy_node(root_node);
     delete fake;
   }
 
-  Tree &operator=(Tree &&other) {
+  tree &operator=(tree &&other) noexcept {
     root_node = other.root_node;
     fake = other.fake;
     tree_size = other.tree_size;
+
     other.root_node = nullptr;
     other.fake = nullptr;
     other.tree_size = 0;
+
     return *this;
   }
 
-  void tree_print(TreeNode *root = nullptr) {
-    if (root == nullptr) root = root_node;
-    if (root->left_elem_) tree_print(root->left_elem_);
-    std::cout << "value = " << root->value_ << std::endl;
-    if (root->parent_ && root->parent_ != fake)
-      std::cout << "parent = " << root->parent_->value_ << std::endl;
-    if (root->left_elem_)
-      std::cout << "left elem = " << root->left_elem_->value_ << std::endl;
-    if (root->right_elem_)
-      std::cout << "right elem = " << root->right_elem_->value_ << std::endl;
-    std::cout << std::endl;
-    if (root->right_elem_) tree_print(root->right_elem_);
+  [[nodiscard]] iterator begin() noexcept {
+    return TreeIterator(fake->right_elem_);
   }
-
-  void fake_print() {
-    std::cout << "lvalue = " << fake->left_elem_->value_<<std::endl;
-    std::cout << "rvalue = " << fake->right_elem_->value_<<std::endl;
-    std::cout << "root of fake = " << fake->parent_->value_<<std::endl;
-  }
-
-  [[nodiscard]] iterator begin() noexcept { return TreeIterator(fake->right_elem_); }
   [[nodiscard]] iterator end() noexcept { return TreeIterator(fake); }
 
-  [[nodiscard]]const_iterator begin() const noexcept { return TreeIteratorConst(fake->right_elem_);}
-  [[nodiscard]]const_iterator end() const noexcept { return TreeIteratorConst(fake);}
-
+  [[nodiscard]] const_iterator begin() const noexcept {
+    return TreeIteratorConst(fake->right_elem_);
+  }
+  [[nodiscard]] const_iterator end() const noexcept {
+    return TreeIteratorConst(fake);
+  }
 
   [[nodiscard]] bool empty() const noexcept { return root_node == fake; }
   [[nodiscard]] size_type size() const noexcept { return tree_size; }
@@ -267,12 +249,12 @@ class Tree {
 
   void clear() {
     if (!empty()) {
-      DestroyNode(root_node);
+      destroy_node(root_node);
       root_is_fake();
     }
   }
 
-  std::pair<iterator, bool> insert(const value_type &value) {
+  virtual std::pair<iterator, bool> insert(const value_type &value) {
     return auto_insert(value, true);
   }
 
@@ -280,11 +262,11 @@ class Tree {
     TreeNode *curr_pos = pos.curr_node;
     if (curr_pos == fake->left_elem_) {
       iterator buff = pos;
-      buff--;
+      --buff;
       fake->left_elem_ = buff.curr_node;
     } else if (curr_pos == fake->right_elem_) {
       iterator buff = pos;
-      buff++;
+      ++buff;
       fake->right_elem_ = buff.curr_node;
     }
     if (!curr_pos->left_elem_ && !curr_pos->right_elem_) {
@@ -334,15 +316,13 @@ class Tree {
     delete pos.curr_node;
   }
 
-  void swap(Tree &other) noexcept {
-    std::swap(root_node,other.root_node);
+  void swap(tree &other) noexcept {
+    std::swap(root_node, other.root_node);
     std::swap(fake, other.fake);
-    std::swap(tree_size,other.tree_size);
+    std::swap(tree_size, other.tree_size);
   }
 
-  void merge(Tree &other) {
-    default_merge(other,other.root_node);
-  }
+  void merge(tree &other) { default_merge(other, other.root_node); }
 
   iterator find(const key_type &key) noexcept {
     TreeNode *sol = find_contains(key);
@@ -350,12 +330,10 @@ class Tree {
     return iterator(sol);
   }
 
-  bool contains(const key_type &key) noexcept {
+  [[nodiscard]] bool contains(const key_type &key) noexcept {
     TreeNode *sol = find_contains(key);
-    if (!sol || sol->value_ != key) return false;
-    return true;
+    return !(!sol || sol->value_ != key);
   }
-
 
  protected:
   std::pair<iterator, bool> auto_insert(const value_type &value, bool multi) {
@@ -364,21 +342,19 @@ class Tree {
       return std::make_pair(find_sol, false);
     }
     iterator iter = default_insert(value);
-    return std::make_pair(iter, true);  
+    return std::make_pair(iter, true);
   }
 
-  void default_merge(Tree & other, TreeNode * item) {
+  void default_merge(tree &other, TreeNode *item) {
+    if (item->right_elem_) default_merge(other, item->right_elem_);
+    if (item->left_elem_) default_merge(other, item->left_elem_);
     insert(item->value_);
     auto iter = iterator(item);
     other.erase(iter);
-    if (item->right_elem_)
-      default_merge(other,item->right_elem_);
-    if (item->left_elem_)
-      default_merge(other,item->left_elem_);
   }
 
   iterator default_insert(const value_type &value) {
-    TreeNode *new_node = new TreeNode(value);
+    auto *new_node = new TreeNode(value);
     if (root_node == fake) {
       root_node = new_node;
       fake->parent_ = new_node;
@@ -387,7 +363,7 @@ class Tree {
       new_node->parent_ = fake;
     } else {
       TreeNode *buff = root_node;
-      while (1) {
+      while (true) {
         if (buff->value_ > new_node->value_) {
           if (buff->left_elem_) {
             buff = buff->left_elem_;
@@ -426,25 +402,24 @@ class Tree {
       } else if (current->value_ == key) {
         return current;
       } else if (current->value_ > key) {
-        if (!current->left_elem_)
-          return current;
+        if (!current->left_elem_) return current;
         current = current->left_elem_;
       } else {
-        if (!current->right_elem_)
-          return current;
+        if (!current->right_elem_) return current;
         current = current->right_elem_;
       }
     }
   }
 
-  void DestroyNode(TreeNode *root) {
-    if (root->left_elem_) DestroyNode(root->left_elem_);
-    if (root->right_elem_) DestroyNode(root->right_elem_);
+  void destroy_node(TreeNode *root) {
+    if (root->left_elem_) destroy_node(root->left_elem_);
+    if (root->right_elem_) destroy_node(root->right_elem_);
     delete root;
   }
 
   void root_is_fake() {
-    fake->is_fake = 1;
+    fake->is_fake = true;
+
     fake->parent_ = fake;
     fake->left_elem_ = fake;
     fake->right_elem_ = fake;
@@ -454,14 +429,11 @@ class Tree {
 
   void copy_tree(const TreeNode *other) {
     default_insert(other->value_);
-    if (other->left_elem_)
-    copy_tree(other->left_elem_);
-    if (other->right_elem_)
-    copy_tree(other->right_elem_);
+    if (other->left_elem_) copy_tree(other->left_elem_);
+    if (other->right_elem_) copy_tree(other->right_elem_);
   }
 
-  TreeNode * ret_root() { return root_node; }
-
+  TreeNode *ret_root() noexcept { return root_node; }
 };
 
 }  // namespace s21

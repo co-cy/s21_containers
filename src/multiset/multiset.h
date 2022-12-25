@@ -4,30 +4,30 @@
 #include <cstdio>
 #include <initializer_list>
 
-#include "../tree/Tree.h"
+#include "../tree/tree.h"
 
 namespace s21 {
 
 template <class Key>
-class multiset : public Tree<Key> {
+class multiset : public tree<Key> {
  private:
   ///                 <----------Set Member type---------->
-  using Tree<Key>::Tree;
+  using tree<Key>::tree;
 
   using key_type = Key;
   using value_type = Key;
   using reference = value_type&;
   using const_reference = const value_type&;
-  using iterator = typename Tree<key_type>::TreeIterator;
-  using const_iterator = typename Tree<value_type>::TreeIteratorConst;
+  using iterator = typename tree<key_type>::TreeIterator;
+  using const_iterator = typename tree<value_type>::TreeIteratorConst;
   using size_type = std::size_t;
 
  public:
   ///                 <----------Multiset Member functions---------->
 
-  multiset(std::initializer_list<value_type> const& items) : multiset(){
+  multiset(std::initializer_list<value_type> const& items) : multiset() {
     for (value_type value : items) {
-      Tree<Key>::default_insert(value);
+      tree<Key>::default_insert(value);
     }
   }
   ///                 <----------Multiset Iterators---------->
@@ -37,7 +37,7 @@ class multiset : public Tree<Key> {
   ///                 <----------Multiset Modifiers---------->
 
   size_type count(const key_type& key) {
-    auto iter = Tree<Key>::find(key);
+    auto iter = tree<Key>::find(key);
     if (iter == iterator(nullptr)) return 0;
     size_type count = 0;
     key_type k = *iter;
@@ -49,7 +49,7 @@ class multiset : public Tree<Key> {
   }
 
   std::pair<iterator, iterator> equal_range(const key_type& key) {
-    auto iter_begin = Tree<Key>::find(key);
+    auto iter_begin = tree<Key>::find(key);
     auto iter = iter_begin;
     key_type k = *iter;
     do {
@@ -73,12 +73,13 @@ class multiset : public Tree<Key> {
     return sol;
   }
 
-  template<class... Args>
-  std::vector<std::pair<iterator,bool>> emplace(Args&&... args){
-    std::vector<std::pair<iterator,bool>> res = {(Tree<value_type>::insert(args))...};
-  return res;
+  // TODO Изменть std -> s21
+  template <class... Args>
+  std::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
+    std::vector<std::pair<iterator, bool>> res = {
+        (tree<value_type>::insert(args))...};
+    return res;
   }
-
 };
 }  // namespace s21
 
