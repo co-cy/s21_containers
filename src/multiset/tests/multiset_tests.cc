@@ -618,7 +618,7 @@ TEST(test, equal_range) {
 }
 
 TEST(test, lower_bound) {
-  std::initializer_list<int> items{10,50,30,30,60,20,23,40};
+  std::initializer_list<int> items{10, 50, 30, 30, 60, 20, 23, 40};
   s21::multiset<int> my_multiset(items);
   std::multiset<int> std_multiset(items);
 
@@ -632,7 +632,7 @@ TEST(test, lower_bound) {
 }
 
 TEST(test, upper_bound) {
-  std::initializer_list<int> items{10,50,30,30,60,20,23,40};
+  std::initializer_list<int> items{10, 50, 30, 30, 60, 20, 23, 40};
   s21::multiset<int> my_multiset(items);
   std::multiset<int> std_multiset(items);
 

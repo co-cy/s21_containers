@@ -117,7 +117,6 @@ class map : public tree<std::pair<Key, T>> {
       other.erase(iter);
     }
   }
-
 };
 
 }  // namespace s21

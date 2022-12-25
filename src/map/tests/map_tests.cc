@@ -53,13 +53,9 @@ TEST(test, mapConstructorsList) {
 
   s21::map<int, std::string> my_map4 = std::move(my_map2);
   std::map<int, std::string> std_map4 = std::move(std_map2);
-
-
-
 }
 
 TEST(test, mapAt) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -77,7 +73,6 @@ TEST(test, mapAt) {
 }
 
 TEST(test, mapSquareBrackets) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -92,7 +87,6 @@ TEST(test, mapSquareBrackets) {
   my_ans = my_map[3];
   std_ans = std_map[3];
   ASSERT_TRUE(my_ans == std_ans);
-
 }
 
 TEST(test, mapEmpty) {
@@ -100,13 +94,12 @@ TEST(test, mapEmpty) {
   ASSERT_TRUE(new_map.empty() == true);
 
   s21::map<int, std::string> my_map{
-    std::make_pair(42, "foo"), std::make_pair(3, "bar"),
-    std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
+      std::make_pair(42, "foo"), std::make_pair(3, "bar"),
+      std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
   ASSERT_TRUE(my_map.empty() == false);
 }
 
 TEST(test, mapSize) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -118,7 +111,6 @@ TEST(test, mapSize) {
 }
 
 TEST(test, mapClear) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -133,27 +125,27 @@ TEST(test, mapInsert1) {
   s21::map<int, std::string> my_map;
   std::map<int, std::string> std_map;
 
-  my_map.insert(1,"one");
-  std_map.insert({1,"one"});
-  my_map.insert(2,"two");
-  std_map.insert({2,"two"});
-  my_map.insert(22,"twotwo");
-  std_map.insert({22,"twotwo"});
-  my_map.insert(-22,"-twotwo");
-  std_map.insert({-22,"-twotwo"});
-  my_map.insert(22,"three");
-  std_map.insert({22,"three"});
-  my_map.insert(22234,"two3two");
-  std_map.insert({22234,"two3two"});
-  my_map.insert(12,"onetwo");
-  std_map.insert({12,"onetwo"});
-  my_map.insert(-12,"-onetwo");
-  std_map.insert({-12,"-onetwo"});
+  my_map.insert(1, "one");
+  std_map.insert({1, "one"});
+  my_map.insert(2, "two");
+  std_map.insert({2, "two"});
+  my_map.insert(22, "twotwo");
+  std_map.insert({22, "twotwo"});
+  my_map.insert(-22, "-twotwo");
+  std_map.insert({-22, "-twotwo"});
+  my_map.insert(22, "three");
+  std_map.insert({22, "three"});
+  my_map.insert(22234, "two3two");
+  std_map.insert({22234, "two3two"});
+  my_map.insert(12, "onetwo");
+  std_map.insert({12, "onetwo"});
+  my_map.insert(-12, "-onetwo");
+  std_map.insert({-12, "-onetwo"});
   auto my_iter = my_map.begin();
   auto std_iter = std_map.begin();
-  while (std_iter!=std_map.end()) {
-    ASSERT_EQ((*my_iter).first,(*std_iter).first);
-    ASSERT_EQ((*my_iter).second,(*std_iter).second);
+  while (std_iter != std_map.end()) {
+    ASSERT_EQ((*my_iter).first, (*std_iter).first);
+    ASSERT_EQ((*my_iter).second, (*std_iter).second);
     ++my_iter;
     ++std_iter;
   }
@@ -163,34 +155,33 @@ TEST(test, mapInsert2) {
   s21::map<int, std::string> my_map;
   std::map<int, std::string> std_map;
 
-  my_map.insert({1,"one"});
-  std_map.insert({1,"one"});
-  my_map.insert({2,"two"});
-  std_map.insert({2,"two"});
-  my_map.insert({22,"twotwo"});
-  std_map.insert({22,"twotwo"});
-  my_map.insert({-22,"-twotwo"});
-  std_map.insert({-22,"-twotwo"});
-  my_map.insert({22,"three"});
-  std_map.insert({22,"three"});
-  my_map.insert({22234,"two3two"});
-  std_map.insert({22234,"two3two"});
-  my_map.insert({12,"onetwo"});
-  std_map.insert({12,"onetwo"});
-  my_map.insert({-12,"-onetwo"});
-  std_map.insert({-12,"-onetwo"});
+  my_map.insert({1, "one"});
+  std_map.insert({1, "one"});
+  my_map.insert({2, "two"});
+  std_map.insert({2, "two"});
+  my_map.insert({22, "twotwo"});
+  std_map.insert({22, "twotwo"});
+  my_map.insert({-22, "-twotwo"});
+  std_map.insert({-22, "-twotwo"});
+  my_map.insert({22, "three"});
+  std_map.insert({22, "three"});
+  my_map.insert({22234, "two3two"});
+  std_map.insert({22234, "two3two"});
+  my_map.insert({12, "onetwo"});
+  std_map.insert({12, "onetwo"});
+  my_map.insert({-12, "-onetwo"});
+  std_map.insert({-12, "-onetwo"});
   auto my_iter = my_map.begin();
   auto std_iter = std_map.begin();
-  while (std_iter!=std_map.end()) {
-    ASSERT_EQ((*my_iter).first,(*std_iter).first);
-    ASSERT_EQ((*my_iter).second,(*std_iter).second);
+  while (std_iter != std_map.end()) {
+    ASSERT_EQ((*my_iter).first, (*std_iter).first);
+    ASSERT_EQ((*my_iter).second, (*std_iter).second);
     ++my_iter;
     ++std_iter;
   }
 }
 
 TEST(test, mapErace1) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -200,7 +191,6 @@ TEST(test, mapErace1) {
 
   auto my_iter = my_map.begin();
   auto std_iter = std_map.begin();
-
 
   my_map.erase(my_iter);
   std_map.erase(std_iter);
@@ -218,7 +208,6 @@ TEST(test, mapErace1) {
 }
 
 TEST(test, mapErace2) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -247,7 +236,6 @@ TEST(test, mapErace2) {
 }
 
 TEST(test, mapErace3) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -277,9 +265,7 @@ TEST(test, mapErace3) {
   ASSERT_TRUE(my_iter == my_map.end());
 }
 
-
 TEST(test, mapSwap) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -308,7 +294,6 @@ TEST(test, mapSwap) {
   }
   ASSERT_TRUE(my_iter == my_map.end());
 
-
   my_iter = my_map2.begin();
   std_iter = std_map2.begin();
 
@@ -322,7 +307,6 @@ TEST(test, mapSwap) {
 }
 
 TEST(test, mapMerge) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -356,46 +340,44 @@ TEST(test, mapInsertAsign) {
   s21::map<int, std::string> my_map;
   std::map<int, std::string> std_map;
 
-  my_map.insert_or_assign(1,"one");
-  std_map.insert_or_assign(1,"one");
-  my_map.insert_or_assign(2,"two");
-  std_map.insert_or_assign(2,"two");
-  my_map.insert_or_assign(22,"twotwo");
-  std_map.insert_or_assign(22,"twotwo");
-  my_map.insert_or_assign(-22,"-twotwo");
-  std_map.insert_or_assign(-22,"-twotwo");
-  my_map.insert_or_assign(22,"three");
-  std_map.insert_or_assign(22,"three");
-  my_map.insert_or_assign(22234,"two3two");
-  std_map.insert_or_assign(22234,"two3two");
-  my_map.insert_or_assign(12,"onetwo");
-  std_map.insert_or_assign(12,"onetwo");
-  my_map.insert_or_assign(-12,"-onetwo");
-  std_map.insert_or_assign(-12,"-onetwo");
+  my_map.insert_or_assign(1, "one");
+  std_map.insert_or_assign(1, "one");
+  my_map.insert_or_assign(2, "two");
+  std_map.insert_or_assign(2, "two");
+  my_map.insert_or_assign(22, "twotwo");
+  std_map.insert_or_assign(22, "twotwo");
+  my_map.insert_or_assign(-22, "-twotwo");
+  std_map.insert_or_assign(-22, "-twotwo");
+  my_map.insert_or_assign(22, "three");
+  std_map.insert_or_assign(22, "three");
+  my_map.insert_or_assign(22234, "two3two");
+  std_map.insert_or_assign(22234, "two3two");
+  my_map.insert_or_assign(12, "onetwo");
+  std_map.insert_or_assign(12, "onetwo");
+  my_map.insert_or_assign(-12, "-onetwo");
+  std_map.insert_or_assign(-12, "-onetwo");
 
   auto my_iter = my_map.begin();
   auto std_iter = std_map.begin();
-  while (std_iter!=std_map.end()) {
-    ASSERT_EQ((*my_iter).first,(*std_iter).first);
-    ASSERT_EQ((*my_iter).second,(*std_iter).second);
+  while (std_iter != std_map.end()) {
+    ASSERT_EQ((*my_iter).first, (*std_iter).first);
+    ASSERT_EQ((*my_iter).second, (*std_iter).second);
     ++my_iter;
     ++std_iter;
   }
 }
 
 TEST(test, mapContains) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
-  ASSERT_EQ(my_map.contains(42),true);
-  ASSERT_EQ(my_map.contains(42342),false);
-  ASSERT_EQ(my_map.contains(33),true);
-  ASSERT_EQ(my_map.contains(0),false);
+  ASSERT_EQ(my_map.contains(42), true);
+  ASSERT_EQ(my_map.contains(42342), false);
+  ASSERT_EQ(my_map.contains(33), true);
+  ASSERT_EQ(my_map.contains(0), false);
 }
 
 TEST(test, mapEmplace) {
-
   s21::map<int, std::string> my_map{
       std::make_pair(42, "foo"), std::make_pair(3, "bar"),
       std::make_pair(33, "aboba"), std::make_pair(3, "ba")};
@@ -408,9 +390,8 @@ TEST(test, mapEmplace) {
       std::make_pair(343, "abobaaWD"), std::make_pair(-3, "ba")};
 
   std_map.merge(std_map2);
-  my_map.emplace(
-      std::make_pair(42, "foo"), std::make_pair(323, "basdar"),
-      std::make_pair(343, "abobaaWD"), std::make_pair(-3, "ba"));
+  my_map.emplace(std::make_pair(42, "foo"), std::make_pair(323, "basdar"),
+                 std::make_pair(343, "abobaaWD"), std::make_pair(-3, "ba"));
 
   auto my_iter = my_map.begin();
   auto std_iter = std_map.begin();
