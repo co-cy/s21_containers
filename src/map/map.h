@@ -33,7 +33,7 @@ class map : public Tree<std::pair<Key,T>> {
   }
 
   ///                 <----------Map Element access---------->
-  mapped_type& at(const key_type& key) {
+  [[nodiscard]] mapped_type& at(const key_type& key) {
     auto sol = find_contains_map(key);
     if (!sol) throw std::out_of_range("There is no such key!");
     return sol->value_.second;
@@ -82,7 +82,7 @@ class map : public Tree<std::pair<Key,T>> {
   }
 
   ///                 <----------Map Modifiers---------->
-  bool contains(const key_type& key) {
+  [[nodiscard]] bool contains(const key_type& key) {
     if (find_contains_map(key)) return 1;
     return 0;
   }
@@ -110,7 +110,6 @@ class map : public Tree<std::pair<Key,T>> {
       }
     }
   }
-
 
   void merge_map(map& other, typename Tree<value_type>::TreeNode * item) {
     if (item->right_elem_)
