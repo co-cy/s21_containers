@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "../tree/tree.h"
+#include "vector/vector.h"
 
 namespace s21 {
 
@@ -85,8 +86,8 @@ class map : public tree<std::pair<Key, T>> {
   }
 
   template <class... Args>
-  std::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
-    std::vector<std::pair<iterator, bool>> res = {(insert(args))...};
+  s21::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
+    s21::vector<std::pair<iterator, bool>> res = {(insert(args))...};
     return res;
   }
 

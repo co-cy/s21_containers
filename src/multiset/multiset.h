@@ -5,6 +5,7 @@
 #include <initializer_list>
 
 #include "../tree/tree.h"
+#include "vector/vector.h"
 
 namespace s21 {
 
@@ -73,10 +74,9 @@ class multiset : public tree<Key> {
     return sol;
   }
 
-  // TODO Изменть std -> s21
   template <class... Args>
-  std::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
-    std::vector<std::pair<iterator, bool>> res = {
+  s21::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
+    s21::vector<std::pair<iterator, bool>> res = {
         (tree<value_type>::insert(args))...};
     return res;
   }

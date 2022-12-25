@@ -5,6 +5,7 @@
 #include <initializer_list>
 
 #include "../tree/tree.h"
+#include "vector/vector.h"
 
 namespace s21 {
 
@@ -41,10 +42,9 @@ class set : public tree<Key> {
   }
   void merge(set &other) { merge_set(other, other.ret_root()); }
 
-  // TODO Изменть std -> s21
   template <class... Args>
-  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
-    std::vector<std::pair<iterator, bool>> res = {(insert(args))...};
+  s21::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+    s21::vector<std::pair<iterator, bool>> res = {(insert(args))...};
     return res;
   }
 
