@@ -43,8 +43,8 @@ class set : public tree<Key> {
   void merge(set &other) { merge_set(other, other.ret_root()); }
 
   template <class... Args>
-  s21::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
-    s21::vector<std::pair<iterator, bool>> res = {(insert(args))...};
+  std::vector<std::pair<iterator, bool>> emplace(Args &&...args) {
+    std::vector<std::pair<iterator, bool>> res = {(insert(args))...};
     return res;
   }
 

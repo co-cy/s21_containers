@@ -23,3 +23,14 @@ clean:
 	@cmake $(var) -S $(source_path) -B $(build_path) -G "Unix Makefiles"
 	@make -C $(build_path) $@ -j 16
 .PHONY: %
+
+mem:
+	for line in $(shell find $(build_path) -name "*_test"); do \
+	valgrind --leak-check=full \
+	--leak-resolution=med \
+	--track-origins=yes \
+	--vgdb=no \
+	--show-leak-kinds=all \
+	./build/vector_test; \
+	done
+.PHONY: mem

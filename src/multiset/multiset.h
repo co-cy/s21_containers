@@ -75,8 +75,8 @@ class multiset : public tree<Key> {
   }
 
   template <class... Args>
-  s21::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
-    s21::vector<std::pair<iterator, bool>> res = {
+  std::vector<std::pair<iterator, bool>> emplace(Args&&... args) {
+    std::vector<std::pair<iterator, bool>> res = {
         (tree<value_type>::insert(args))...};
     return res;
   }
