@@ -33,7 +33,7 @@ class map : public tree<std::pair<Key, T>> {
   }
 
   ///                 <----------Map Element access---------->
-  mapped_type& at(const key_type& key) {
+  [[nodiscard]] mapped_type& at(const key_type& key) {
     auto sol = find_contains_map(key);
     if (!sol) throw std::out_of_range("There is no such key!");
     return sol->value_.second;
@@ -117,6 +117,7 @@ class map : public tree<std::pair<Key, T>> {
       other.erase(iter);
     }
   }
+
 };
 
 }  // namespace s21

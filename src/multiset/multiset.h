@@ -36,7 +36,7 @@ class multiset : public tree<Key> {
 
   ///                 <----------Multiset Modifiers---------->
 
-  size_type count(const key_type& key) {
+  [[nodiscard]] size_type count(const key_type& key) {
     auto iter = tree<Key>::find(key);
     if (iter == iterator(nullptr)) return 0;
     size_type count = 0;
@@ -48,7 +48,7 @@ class multiset : public tree<Key> {
     return count;
   }
 
-  std::pair<iterator, iterator> equal_range(const key_type& key) {
+  [[nodiscard]] std::pair<iterator, iterator> equal_range(const key_type& key) {
     auto iter_begin = tree<Key>::find(key);
     auto iter = iter_begin;
     key_type k = *iter;
@@ -59,14 +59,14 @@ class multiset : public tree<Key> {
     return std::make_pair(iter_begin, iter);
   }
 
-  iterator upper_bound(const key_type& key) {
+  [[nodiscard]] iterator upper_bound(const key_type& key) {
     auto node = this->find_contains(key);
     iterator sol = iterator(node);
     while (*sol <= key && sol != this->end()) ++sol;
     return sol;
   }
 
-  iterator lower_bound(const key_type& key) {
+  [[nodiscard]] iterator lower_bound(const key_type& key) {
     auto node = this->find_contains(key);
     iterator sol = iterator(node);
     if (node->value_ < key && sol != this->end()) ++sol;
